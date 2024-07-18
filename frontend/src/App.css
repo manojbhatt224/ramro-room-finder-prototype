@@ -1,0 +1,31 @@
+
+  .main_nav{
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index:1000;
+    margin-bottom: 50px;
+  }
+  .main {
+    margin-top:65px;
+  }
+  
+  .page-container {
+    background-color: #ffffff; /* White background for pages */
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a card-like effect */
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  
+  h1 {
+    color: #007bff; /* Blue heading */
+  }
+  
+  h2 {
+    color: #0056b3; /* Light blue heading */
+  }
+  
+  p {
+    color: #333;
+  }

@@ -1,0 +1,25 @@
+.pricing-plan {
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #eaf5ff; /* Light blue background for plans */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pricing-plan h2 {
+    color: #0056b3; /* Light blue heading */
+  }
+  
+  .pricing-plan p {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .pricing-plan ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .pricing-plan ul li {
+    margin-bottom: 5px;
+  }

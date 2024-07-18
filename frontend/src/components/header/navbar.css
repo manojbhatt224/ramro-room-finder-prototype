@@ -1,0 +1,56 @@
+/* navbar.css */
+
+/* Hover effect for navbar links */
+.container-fluid{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+}
+.brand-title{
+    font-size:25px;
+    color:darkblue;
+}
+
+
+.profile-container {
+  position: relative;
+  display: inline-block; /* Ensure it takes only the necessary width */
+}
+
+.profile-img-container {
+  position: relative;
+  display: inline-block; /* Ensure it takes only the necessary width */
+}
+
+.profile-img {
+  width: 30px; /* Adjust size as needed */
+  height: 30px; /* Adjust size as needed */
+  border-radius: 50%;
+  margin-right:5px;
+  background-color: lightblue;
+}
+
+.verified-icon {
+  position: absolute;
+  top: 2px; /* Adjust top position to overlay correctly */
+  right: 2px; /* Adjust right position to overlay correctly */
+  color: green; /* Adjust color as needed */
+  font-size: 12px; /* Adjust size as needed */
+}
+
+
+.navbar-nav .nav-link:hover {
+    color: darkcyan; /* Blue color on hover */
+  }
+  
+  /* Active tab style for navbar links */
+  .navbar-nav .nav-link {
+    padding-left:10px;
+    /* color: #0056b3; 
+    font-weight: bold;
+    background-color:lightblue; */
+  }
+  .active{
+ border-bottom: lightblue solid 2px;
+  }
+  

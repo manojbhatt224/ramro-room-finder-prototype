@@ -1,0 +1,25 @@
+.sidebar {
+    width: 0;
+    position: fixed;
+    border-radius:5%;
+    top: 10;
+    left: 0;
+    height: 100vh;
+    background-color: #f0f0f0f0;
+    overflow-x: hidden;
+    transition: width 0.3s ease;
+  }
+  
+  .sidebar.open {
+    width:auto; /* Adjust width as needed */ 
+}
+  
+  .toggle-btn {
+    position: fixed;
+    top: 50%; /* Positions the button 50% from the top of the viewport */
+    left: 0; /* Aligns the button to the left edge of the viewport */
+    transform: translateY(-50%); /* Centers the button vertically */
+    width: auto; /* Adjust button width as needed */
+    z-index: 1000; /* Ensure button is above sidebar */
+  }
+  

@@ -1,0 +1,27 @@
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #c7b6b7; /* Light red background */
+  }
+  
+  .error-content {
+    text-align: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .error-title {
+    color: #dc3545; /* Red color for the title */
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  
+  .error-message {
+    font-size: 18px;
+    color: #6c757d; /* Gray color for the message */
+  }
+  
