@@ -28,9 +28,9 @@ const Sidebar = () => {
             <MdDashboard className="fs-2" />
             <span className="ms-2 d-none d-sm-inline">Dashboard</span>
           </Link>
-          <Link to="/dashboard/rents" className="nav-link text-primary fs-5 my-1" aria-current="page">
+          <Link to="/dashboard/listings" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <FaHouseUser className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Rents</span>
+            <span className="ms-2 d-none d-sm-inline">Listings</span>
           </Link>
           <a href="#" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <TbBrandBooking className="fs-2" />

@@ -4,18 +4,16 @@ const Schema = mongoose.Schema;
 
 const listingSchema = new mongoose.Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    type: { type: String,  enum: ['room','flat', 'house'], default: 'room'}, 
+    type: { type: String,  enum: ['Room','Flat', 'House'], default: 'room'}, 
     title: { type: String, required: true },
     description: { type: String, default: '' },
     price: { type: Number, required: true },
     location: { type: String, default: '' },
     parking: {type: Boolean, default: 'false'},
     area: {type: Number, required: true}
-});
+}, {discriminatorKey: 'type', timestamps:true});
 
 const Listing = mongoose.model('Listing', listingSchema);
-
-
 
 const roomSchema = new mongoose.Schema({
     bed: {type: Boolean, default:false},
@@ -25,10 +23,10 @@ const roomSchema = new mongoose.Schema({
 const Room = Listing.discriminator('Room', roomSchema);
 
 const flatSchema = new mongoose.Schema({
-    kitchen: { type: Boolean, default: true},
+    kitchen: { type: Boolean, default: false},
     hall: {type:Boolean, default:false},
     bedrooms: { type: Number, required: true},
-    maxPeople:{type: Number}
+    maxPeople:{type: Number, required:true}
 });
 
 

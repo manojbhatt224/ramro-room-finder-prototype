@@ -1,4 +1,4 @@
-import { Listing } from "../models/listingModel.js";
+import { Listing, Room, House, Flat } from "../models/listingModel.js";
 
 class ListingController {
   static async getAllListings(req, res) {
@@ -28,6 +28,64 @@ class ListingController {
         res.sendData(401, {error: `${error}`});
     }
 }
+static async addListing(req, res) {
+  const {
+    userId,
+    title,
+    description,
+    price,
+    type,
+    parking,
+    bed,
+    kitchen,
+    area,
+    maxPeople,
+    garden,
+    rooms
+  } =req.body;
+  if (type === "Room" || type === "Flat" || type === "House") {
+    var newListing=null;
+    let listingData = {userId, title, description, type, price, area, maxPeople };
+    if (typeof parking === "boolean") listingData.parking = parking;
+    if (type === "Room") {
+      if (userId && !title || !description || !price || !area || !maxPeople) {
+        return res.status(401).json({ error: "Incomplete details for Room!" });
+      }
+      if (typeof bed==="boolean") listingData.bed=bed;
+      newListing = new Room(listingData);
+    } 
+    else if (type === "Flat") {
+      if (userId && userId && !title || !description || !price || !area || !bedrooms || !maxPeople) {
+        return res.status(401).json({ error: "Incomplete details for Flat!" });
+      }
+      if (typeof hall === "boolean") listingData.hall = hall;
+      if (typeof kitchen === "boolean") listingData.kitchen = kitchen;
+      listingData.bedrooms = bedrooms;
+      newListing = new Flat(listingData);
+    } 
+    else if (type === "House") {
+      if (userId && !title || !description || !price || !area || !rooms) {
+        return res.status(401).json({ error: "Incomplete details for House!" });
+      }
+      if (typeof garden === boolean) listingData.garden = garden;
+      listingData.rooms = rooms;
+     newListing = new House(listingData);
+    }
+    if (newListing){
+    try {
+      await newListing.save();
+      return res.sendData(200, {data:listingData});
+    } catch (error) {
+      return res.sendData(401, { error: error });
+    }}
+    else{
+      return res.sendData(401, { error: "Listing not created!" });
+    }
+  } else {
+    return res.status(401).json({ error: "Invalid listing type" });
+  }
+}
+
 static async updateListing(req, res) {
   const listingId = req.params.id;
   const {
@@ -44,7 +102,7 @@ static async updateListing(req, res) {
     rooms
   } =req.body;
   try {
-          const listing=await Listing.findByIdAndUpdate(listingId, {title, description, price, location, parking, bed, area, maxPeople, garden, rooms}, {new:true} );
+          const listing=await Listing.findByIdAndUpdate(listingId, {title, description, price, kitchen, location, parking, bed, area, maxPeople, garden, rooms}, {new:true} );
           res.sendData(200, {data: listing})
          
   } catch (error) {

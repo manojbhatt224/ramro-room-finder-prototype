@@ -5,6 +5,7 @@ import "./Dashboard.css"
 import SideBar from "../../components/sidebar/SideBar";
 import {Routes, Route}from 'react-router-dom'
 import Summary from "../summary/Summary";
+import Listings from "../../components/listings/Listings";
 const Dashboard = () => {
   const user = useSelector(selectUser);
   return (
@@ -15,7 +16,7 @@ const Dashboard = () => {
   <div className="dashboard-content">
   <Routes>
   <Route path="/" element={<Summary/>}/>
-  <Route path="/rents" element={<h1>Rents</h1>}/>
+  <Route path="/listings" element={<Listings/>}/>
   </Routes>
   </div>
   </div>

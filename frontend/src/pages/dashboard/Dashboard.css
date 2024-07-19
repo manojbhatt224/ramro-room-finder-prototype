@@ -15,7 +15,6 @@
 .dashboard-wrapper {
   margin:0px;
   padding:0px;
-  background-color:red;
   display: flex;
   height: 100vh; /* Ensure dashboard wrapper takes full height */
 }
@@ -34,7 +33,7 @@ width:55px;
 .dashboard-content { /* Content takes remaining space */
   padding: 10px; /* Example padding */
   margin:0px;
-  background-color:rgb(200, 200, 209);
+  /* background-color:rgb(200, 200, 209); */
   width:100%;
 }
 
