@@ -8,6 +8,7 @@ import session from 'express-session';
 import passport from './config/passport-setup.js'
 import { errorHandler } from './helpers/errorHandler.js';
 import cookieParser from 'cookie-parser'
+import { handleFileUpload } from './helpers/fileUpload.js';
 
 configDotenv();
 const app= express();
@@ -42,6 +43,28 @@ app.use(passport.session());
 
 
 app.use('/api', routes)
+app.use('/checkupload',async (req, res)=>{
+  try {
+    const {files } = await handleFileUpload(req);
+    
+    const medias=[];
+    files.map((media) => {
+      const newMedia = {
+        path: media.path,
+        type: media.type,
+      };
+      medias.push(newMedia);
+    });
+
+    res.sendData(200, {data:medias});
+
+  } catch (error) {
+    console.error('Transaction aborted due to error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 app.use(errorHandler);
 app.listen(port, ()=>{
