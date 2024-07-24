@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
-import User from '../models/User.js'
-
+import { configDotenv } from 'dotenv'
+import User from '../models/userModel.js'
+configDotenv();
 var checkUserAuth = async (req, res, next) => {
   let token
   const { authorization } = req.headers
@@ -10,16 +11,15 @@ var checkUserAuth = async (req, res, next) => {
       token = authorization.split(' ')[1]
 
       // Verify Token
-      const { userID } = jwt.verify(token, process.env.JWT_SECRET_KEY)
+      const { id } = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
   
       // Get User from Token
-      req.user = await User.findById(userID).select('-password')
+      req.user = await User.findById(id).select('-password')
 
       next()
     } catch (error) {
-      console.log(error)
-      res.sendData(401, "Unauthorized User")
-    //   res.status(401).send({ "status": "failed", "message": "Unauthorized User" })
+      res.sendData(401, {error: error})
+
     }
   }
   if (!token) {

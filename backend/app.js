@@ -10,6 +10,11 @@ import { errorHandler } from './helpers/errorHandler.js';
 import cookieParser from 'cookie-parser'
 import { handleFileUpload } from './helpers/fileUpload.js';
 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 configDotenv();
 const app= express();
 const port=process.env.PORT;
@@ -23,10 +28,14 @@ app.use(cors({
 // Database Connection
 connectDB(process.env.MONGOURL)
 
+
 // JSON Configuration
 app.use(express.json());
 app.use(customRenderer);
 
+
+// Serve static files from the "uploads" directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Setup session
 app.use(cookieParser())
@@ -47,16 +56,28 @@ app.use('/checkupload',async (req, res)=>{
   try {
     const {files } = await handleFileUpload(req);
     
-    const medias=[];
-    files.map((media) => {
-      const newMedia = {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    const newListing = new Listing(req.body);
+    await newListing.save({ session });
+
+    const mediaPromises = files.map((media) => {
+      const newMedia = new Media({
+        listingId: newListing._id,
         path: media.path,
         type: media.type,
-      };
-      medias.push(newMedia);
+      });
+      return newMedia.save({ session });
     });
 
-    res.sendData(200, {data:medias});
+    await Promise.all(mediaPromises);
+
+    await session.commitTransaction();
+    session.endSession();
+
+    res.status(201).json(newListing);
+
 
   } catch (error) {
     console.error('Transaction aborted due to error:', error);

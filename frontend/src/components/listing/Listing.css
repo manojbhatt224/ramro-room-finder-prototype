@@ -1,7 +1,34 @@
-.cimg{
-    height:200px;
-    width:400px;
+
+.carousel-inner{
+    width:320px;
+    background-color:rgb(146, 146, 150);
+}
+.carousel-item{
+    width:320px;
+}
+
+.img-wrap{ 
+    width: 100%;
+    height:300px;
+    display:flex;
+    justify-content: center;
+    align-content: center;
+}
+.img-wrap img{
+
 }
 .card-text{
     margin:1px;
+}
+.card{
+    background-color:#f0f0f0;
+    margin:10px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-body{
+    width:100%;
+    background-color:lightblue;
+
 }

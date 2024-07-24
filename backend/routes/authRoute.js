@@ -1,6 +1,6 @@
 import express from 'express';
 import { AuthController } from '../controllers/authController.js';
-
+import { getDeviceDetail } from '../middlewares/deviceMiddleware.js';
 const router = express.Router()
 
 router.post("/signup", AuthController.signupUser);

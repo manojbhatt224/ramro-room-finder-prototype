@@ -7,26 +7,19 @@ const Map = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/zone_a.xlsx'); // Path relative to public folder
+        const response = await fetch('/zone_a.xlsx');
         const arrayBuffer = await response.arrayBuffer();
         const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-
-        // Convert the first sheet (assuming there's only one sheet) to JSON
-        const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
+        const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(sheet);
-
-        // Set the Excel data in state
-        // console.log(data);
         const coords = data.map(row => ({
           lat: parseFloat(row.Latitude),
           lng: parseFloat(row.Longitude)
         }));
-        console.log(coords);
-        console.log("First coordinate", coords[0].lat, coords[0].lng)
         setZone(coords);
       } catch (error) {
-        console.error('Error fetching or parsing file:', error);
+        throw error;
       }
     };
 

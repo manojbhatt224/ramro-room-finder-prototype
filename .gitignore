@@ -4,3 +4,4 @@ backend/package-lock.json
 frontend/package-lock.json
 backend/test.html
 backend/test.js
+backend/uploads

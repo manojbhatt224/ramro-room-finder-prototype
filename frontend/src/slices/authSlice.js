@@ -2,14 +2,19 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginAPI, signupAPI } from '../api/authAPI';
 
 const loadFromLocalStorage = (key) => {
-  const value = localStorage.getItem(key);
+  const value = localStorage.getItem(key);  
+  if (value === 'true') return true;
+  if (value === 'false') return false;
   return value ? JSON.parse(value) : null; // Parse JSON or return null if not present
 };
 
 const initialState = {
-  user: loadFromLocalStorage('user') || null,
-  token: loadFromLocalStorage('token') || null,
-  isAuthenticated: localStorage.getItem('isAuthenticated') || false,
+  // user: loadFromLocalStorage('user') || null,
+  // token: loadFromLocalStorage('token') || null,
+  // isAuthenticated: localStorage.getItem('isAuthenticated') || null,
+  user:null,
+  token:null,
+  isAuthenticated:null,
   error: null,
   loading:false,
   success:null
@@ -53,19 +58,21 @@ export const authSlice = createSlice({
       state.user = action.payload;
     },
     setTokens: (state, action) => {
-      state.accessToken = action.payload.accessToken;
-      state.refreshToken = action.payload.refreshToken;
+      state.token = action.payload;
     },
     logout: (state) => {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
-      localStorage.setItem('isAuthenticated',false);
+      // localStorage.removeItem('user');
+      // localStorage.removeItem('token');
+      // localStorage.removeItem('isAuthenticated');
       state.user = null;
-      state.accessToken = null;
-      state.refreshToken = null;
+      state.token=null;
+      state.isAuthenticated=null;
     },
     setError: (state, action) => {
       state.error = action.payload;
+    },
+    setIsAuthenticated:(state, action)=>{
+      state.isAuthenticated=action.payload;
     },
     setSuccess: (state,action)=>{
       state.success=action.payload
@@ -82,15 +89,17 @@ export const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user; // Assuming action.payload contains user data
         state.token = action.payload.token; // Assuming action.payload contains token
-       localStorage.setItem('isAuthenticated', true);
-        localStorage.setItem('user', JSON.stringify(action.payload.user));
-        localStorage.setItem('token', JSON.stringify(action.payload.token));
+      //  localStorage.setItem('isAuthenticated', true);
+      //   localStorage.setItem('user', JSON.stringify(action.payload.user));
+      //   localStorage.setItem('token', JSON.stringify(action.payload.token));
         state.error = null;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
+        state.isAuthenticated=null;
+        state.user=null;
+        state.token=null;
         state.error = action.payload.data.error;
-        console.log("state area",state.error)
       })
       .addCase(signup.pending, (state) => {
         state.loading = true;
@@ -98,7 +107,6 @@ export const authSlice = createSlice({
       })
       .addCase(signup.fulfilled, (state, action) => {
         state.loading = false;
-        console.log(action.payload);
         state.success=action.payload;
         state.error = null;
       })
@@ -109,7 +117,7 @@ export const authSlice = createSlice({
   }
 });
 
-export const { setUser, setTokens, logout, setError, setSuccess} = authSlice.actions;
+export const { setUser, setTokens, logout, setError, setSuccess, setIsAuthenticated} = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
 export const selectToken = (state) => state.auth.token;

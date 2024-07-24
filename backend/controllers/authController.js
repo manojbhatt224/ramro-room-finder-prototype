@@ -3,17 +3,31 @@ import User from "../models/userModel.js";
 import passport from "../config/passport-setup.js";
 import bcrypt from "bcrypt";
 
+import { v4 as uuidv4 } from 'uuid';
 class AuthController {
   static async googleSSO(req, res, next) {
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res);
+    passport.authenticate("google", { 
+      scope: ["profile", "email"],
+      state: JSON.stringify({ device_id: req.session.device_id, device_name: req.session.device_name}) 
+    })(req, res);
   }
 
   static async googleSSOCallback(req, res, next) {
+    if (!req.session.device_id) {
+      req.session.device_id = uuidv4(); // Generate a device ID if not already set
+  }
+  req.session.device_name = req.headers['user-agent'] || 'Unknown Device';
+  console.log(req.session.device_id);
+  console.log(req.session.device_name);
     passport.authenticate(
       "google",
-      { failureRedirect: "http://localhost:3000" },
+      {failureRedirect: "http://localhost:3000", 
+      session:true,
+      state: JSON.stringify({
+        device_id: req.session.device_id,
+        device_name: req.session.device_name})
+    },
       (err, user) => {
-        console.log(user);
         if (err) {
           return res.status(500).json({ error: "Internal Server Error" });
         }

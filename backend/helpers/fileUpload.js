@@ -9,13 +9,11 @@ const __dirname = path.dirname(__filename);
 
 
 const handleFileUpload = (req) => {
-    console.log("Uploading started")
   return new Promise((resolve, reject) => {
     if (req.headers['content-type'].startsWith('multipart/form-data')) {
     const bb = busboy({ headers: req.headers });
     const files = [];
     const fields = {};
-console.log(__dirname);
     bb.on('file', (fieldname, file, filename, encoding, mimetype) => {
         const fileExtension = path.extname(filename.filename);
       const isImage = ['.jpg', '.jpeg', '.png', '.gif'].includes(fileExtension.toLowerCase());

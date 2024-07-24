@@ -5,6 +5,7 @@ const router = express.Router()
 
 
 router.get("/", ListingController.getAllListings);
+router.get("/user", ListingController.getMyListings);
 router.get("/:id", ListingController.getListing);
 router.post("/", ListingController.addListing);
  router.put("/:id", ListingController.updateListing);

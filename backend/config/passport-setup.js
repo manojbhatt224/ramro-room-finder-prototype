@@ -16,19 +16,12 @@ passport.use(
         scope: ["profile", "email"]
     },
     async (accessToken, refreshToken, profile, done) => {
-        // console.log(accessToken);
-        // console.log(refreshToken);
         try {
             let user =await User.findOne({ ssoId: profile.id}).exec();
             if (user){
-                console.log("user with gmail exists")
                 return done(null, user);
             }
-            // user={id:1, name:"test"}
-            // throw Error("Test Error!")
             if (!user) {
-                console.log("User didn't exist, creating.")
-                console.log(profile);
                 user = new User({
                     username: profile.emails[0].value,
                     email: profile.emails[0].value,
@@ -45,7 +38,6 @@ passport.use(
             const createdUser=await User.findOne({ ssoId: profile.id}).exec();
             return done(null, createdUser);   
         } catch (error) {
-            console.log("This is error", error.message)
             return done(error, null);
         }
     })

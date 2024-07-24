@@ -8,11 +8,16 @@ import { FaCheckCircle, FaUserCircle } from "react-icons/fa";
 
 const MyNavbar = () => {
   const user= useSelector(selectUser);
+  const [imageError,setImageError]=useState(false);
   const location=useLocation();
   const dispatch=useDispatch();
   const handleLogout = () => {
     dispatch(logout());
   };
+  const handleProfileImageError=()=>{
+console.log("Image Error");
+    setImageError(true);
+  }
   
   useEffect(() => {
     const handleOutsideClick = (event) => {
@@ -88,12 +93,13 @@ const MyNavbar = () => {
 
 
 <div className="profile-container">
-      {user.photourl ? (
+      {user.photourl && !imageError ? (
         <div className="profile-img-container">
           <img
             src={user.photourl}
             alt="Profile"
             className="profile-img"
+            onError={handleProfileImageError}
           />
           {user.verified && (
             <FaCheckCircle className="verified-icon" />

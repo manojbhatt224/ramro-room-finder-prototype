@@ -1,20 +1,20 @@
+
+import './Explore.css'
 import React, { useEffect } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import Listing from "../listing/Listing";
-import "./Listings.css";
-import AddListing from "../listing/AddListing";
+import Listing from '../../components/listing/Listing';
 
 import { useSelector,useDispatch } from "react-redux";
-import {getMyListings, selectFetchError, selectListings, selectFetchLoading, setFetchError } from "../../slices/listingSlice";
+import {getAllListings, selectFetchError, selectListings, selectFetchLoading, setFetchError } from "../../slices/listingSlice";
 import { Oval } from "react-loader-spinner";
 import Swal from "sweetalert2";
-const Listings = () => {
+const Explore = () => {
   const dispatch=useDispatch();
   const loading=useSelector(selectFetchLoading);
   const error=useSelector(selectFetchError)
   const listings=useSelector(selectListings)
 useEffect(()=>{
-dispatch(getMyListings());
+dispatch(getAllListings());
 
 },[])
 useEffect(() => {
@@ -32,39 +32,12 @@ useEffect(() => {
       } 
     });
   }
-  // if (success) {
-  //   Swal.fire({
-  //     title: "Congratulations!",
-  //     text: success,
-  //     icon: "success"
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       resetForm();
-  //       dispatch(setSuccess(null));
-  //       setIsSignUp(false);
-  //     }
-  //     else{
-  //       resetForm();
-  //       dispatch(setSuccess(null));
-  //       setIsSignUp(false);
-  //     }
-       
-  //   });
-  // }
 }, [error]);
   return (
     <>
-<Link to="/dashboard/listings/edit">Edit</Link><br/>
-<Link to="/dashboard/listings/">Add</Link>
-      <div className="listing-operation">
-      <Routes>
-  <Route path="/" element={<AddListing/>}/>
-  <Route path="/edit" element={<h1>Edit</h1>}/>
-  </Routes>
-      </div>
       <div className="mylistings">
         <div className="listings-head">
-        <h1>My Listings</h1>
+        <h1>Explore Available Listings</h1>
         <hr style={{color:"green"}}/>
         </div>
         <div className="listings">
@@ -79,4 +52,5 @@ useEffect(() => {
   );
 };
 
-export default Listings;
+
+export default Explore

@@ -35,10 +35,8 @@ const Auth = () => {
   const handleSubmit=(e)=>{
     e.preventDefault();
     if(isSignUp){
-      console.log("Signing up data", userData)
       if(userData.password=== userData.confirm_password) {
         setConfirmPass(true)
-        console.log("Signing Up!");
         dispatch(signup(userData));
        }
        else
@@ -47,7 +45,6 @@ const Auth = () => {
       
     }
     else{
-      console.log("Logging In")
       dispatch(login({ username: userData.email, password:userData.password }));
     }
    
@@ -67,7 +64,6 @@ const Auth = () => {
   }
   useEffect(() => {
     if (error) {
-      console.log("The error is", error)
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -82,7 +78,6 @@ const Auth = () => {
       });
     }
     if (success) {
-      console.log("The success is", success)
       Swal.fire({
         title: "Congratulations!",
         text: success,

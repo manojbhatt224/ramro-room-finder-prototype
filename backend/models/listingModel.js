@@ -1,5 +1,6 @@
 
 import mongoose from 'mongoose'
+import { Media} from './mediaModel.js'
 const Schema = mongoose.Schema;
 
 const listingSchema = new mongoose.Schema({
@@ -12,6 +13,7 @@ const listingSchema = new mongoose.Schema({
     parking: {type: Boolean, default: 'false'},
     area: {type: Number, required: true}
 }, {discriminatorKey: 'type', timestamps:true});
+
 
 const Listing = mongoose.model('Listing', listingSchema);
 
@@ -38,5 +40,6 @@ const houseSchema = new mongoose.Schema({
 });
 
 const House = Listing.discriminator('House', houseSchema);
+
 
 export {Room, Flat, House, Listing}

@@ -1,9 +1,4 @@
-import axios from 'axios';
-
-// Create an instance of axios with a custom config
-const axiosInstance = axios.create({
-  baseURL: 'http://192.168.1.65:5000', // Replace with your backend API URL
-});
+import { axiosInstance } from "../helpers/axiosInstance";
 
 export const loginAPI = async (username, password) => {
   try {
@@ -23,9 +18,7 @@ export const signupAPI = async (firstName, lastName, username, email, password, 
     const response = await axiosInstance.post('/api/auth/signup', { firstName, lastName, username, email, password, confirm_password });
     return response.data; // Assuming your API returns user data and token upon successful signup
   } catch (error) {
-    console.log("Error in sign up:", error)
     throw error;
   }
 };
 
-export default axiosInstance;

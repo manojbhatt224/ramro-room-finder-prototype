@@ -6,6 +6,7 @@ import SideBar from "../../components/sidebar/SideBar";
 import {Routes, Route}from 'react-router-dom'
 import Summary from "../summary/Summary";
 import Listings from "../../components/listings/Listings";
+import Explore from "../explore/Explore";
 const Dashboard = () => {
   const user = useSelector(selectUser);
   return (
@@ -16,7 +17,8 @@ const Dashboard = () => {
   <div className="dashboard-content">
   <Routes>
   <Route path="/" element={<Summary/>}/>
-  <Route path="/listings" element={<Listings/>}/>
+  <Route path="/listings/*" element={<Listings/>}/>
+  <Route path="/explore/*" element={<Explore/>}/>
   </Routes>
   </div>
   </div>
