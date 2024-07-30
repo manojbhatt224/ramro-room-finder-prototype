@@ -5,14 +5,14 @@ dotenv.config();
 class Token {
   static getToken(user) {
     const access_token = jwt.sign(
-      { id: user._id, username: user.username },
+      { id: user._id, username: user.username, displayName: user.firstName+" "+ user.lastName},
       process.env.JWT_ACCESS_SECRET,
       { expiresIn: process.env.JWT_ACCESS_EXPIRE_TIME }
     );
 
 
     const refresh_token = jwt.sign(
-      { id: user._id, username: user.username },
+      { id: user._id, username: user.username, displayName: user.firstName+" "+ user.lastName },
       process.env.JWT_REFRESH_SECRET,
       { expiresIn: process.env.JWT_REFRESH_EXPIRE_TIME }
     );
@@ -24,7 +24,7 @@ class Token {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     if(decoded){
         const access_token = jwt.sign(
-            { id: decoded.id, username: decoded.username },
+            { id: decoded.id, username: decoded.username, displayName: decoded.displayName },
             process.env.JWT_ACCESS_SECRET,
             { expiresIn: process.env.JWT_ACCESS_EXPIRE_TIME }
           );

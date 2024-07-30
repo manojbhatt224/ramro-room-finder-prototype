@@ -68,6 +68,9 @@ export const authSlice = createSlice({
       state.token=null;
       state.isAuthenticated=null;
     },
+    setLoading: (state, action)=>{
+      state.loading=action.payload;
+    },
     setError: (state, action) => {
       state.error = action.payload;
     },
@@ -117,7 +120,7 @@ export const authSlice = createSlice({
   }
 });
 
-export const { setUser, setTokens, logout, setError, setSuccess, setIsAuthenticated} = authSlice.actions;
+export const { setUser, setLoading, setTokens, logout, setError, setSuccess, setIsAuthenticated} = authSlice.actions;
 
 export const selectUser = (state) => state.auth.user;
 export const selectToken = (state) => state.auth.token;

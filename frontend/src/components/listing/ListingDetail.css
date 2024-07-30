@@ -1,0 +1,273 @@
+.listingdetail-wrapper {
+    padding: 5px;
+    /* background-color: lightblue; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+   
+  .ld-images {
+    width:90%;
+    height:90%;
+
+    margin: 5px;
+  }
+  
+  .ld-rating-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px;
+    margin: 5px;
+    box-sizing: border-box;
+  }
+  
+  .ld-action {
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+    width:100%;
+    /* background-color:red; */
+
+  }
+  
+  .ld-stars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ld-star {
+    font-size: 2rem;
+    color: #a78c8c;
+    cursor: pointer;
+    transition: color 0.2s;
+    margin: 0 5px;
+  }
+  
+  .ld-star.ld-filled {
+    color: #ffc107;
+  }
+  
+  .ld-comment-box {
+    width: 100%;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    min-height: 60px;
+  }
+  
+  .ld-submit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+
+  
+  .ld-submit-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .ld-submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+
+  .ld-user-reviews {
+    width: 100%;
+    max-width: 1000px;
+
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
+  
+  .ld-review {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+  
+  .ld-review-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+    border: 1px solid rgb(184, 179, 179);
+  }
+  .ld-review-error-img{
+    display:flex;
+    justify-content:center;
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%;
+    border: 1px solid rgb(155, 147, 147);
+    align-items:center;
+    margin-right: 5px;
+    background-color:rgb(185, 156, 156);
+    color:white;
+  }
+  
+  .ld-review-content {
+    flex: 1;
+    margin-left:10px;
+  }
+  
+  .ld-review-name {
+    font-size: 1.2rem;
+    margin: 0 0 5px 0;
+  }
+  
+  .ld-review-stars {
+    display: flex;
+  }
+  
+  .ld-review-star {
+    font-size: 1.2rem;
+    color: #a78c8c;
+    margin-right: 5px;
+  }
+  
+  .ld-review-star.ld-filled {
+    color: #ffc107;
+  }
+  
+  .ld-review-comment {
+    margin: 10px 0 0 0;
+  }
+
+/* courousal */
+.ld-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width:1000px;
+    height: 600px;
+    background-color: rgb(101, 101, 117);
+    
+  }
+
+
+  .carousel-inner img {
+    width: 100%;
+    height: 600px; /* Adjust the height as needed */
+    object-fit: cover;
+  }
+  
+  .carousel-control-prev-icon,
+  .carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better visibility */
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 5%; /* Adjust the width of the control buttons */
+  }
+  
+  
+  /* Media Queries */
+  
+  @media (max-width: 768px) {
+    .ld-rating-container {
+      padding: 10px;
+    }
+  
+    .ld-action {
+      flex-direction: column;
+    }
+  
+    .ld-star {
+      font-size: 1.5rem;
+    }
+  
+    .ld-delete-button, .ld-submit-button {
+      width: 100%;
+      margin: 5px 0;
+    }
+  }
+
+
+  
+  @media (max-width: 768px) {
+    .ld-rating-container,
+    .ld-user-reviews {
+      padding: 10px;
+    }
+  
+    .ld-action {
+      flex-direction: column;
+    }
+  
+    .ld-star {
+      font-size: 1.5rem;
+    }
+  
+    .ld-delete-button, .ld-submit-button {
+      width: 100%;
+      margin: 5px 0;
+    }
+  
+    /* .ld-review {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    } */
+  
+    .ld-review-photo {
+      margin-bottom: 10px;
+    }
+  
+    /* .ld-review-stars {
+      justify-content: center;
+    } */
+  }
+  
+  @media (max-width: 480px) {
+    .ld-rating-container,
+    .ld-user-reviews {
+      padding: 5px;
+    }
+    .ld-image-wrapper{
+        height:300px;
+    }
+    .carousel-inner img {
+        width: 100%;
+        height: 300px; /* Adjust the height as needed */
+        object-fit: cover;
+      }
+  
+    .ld-star {
+      font-size: 1.2rem;
+    }
+  
+    .ld-comment-box {
+      font-size: 0.9rem;
+    }
+  
+    .ld-review-name {
+      font-size: 1rem;
+    }
+  
+    .ld-review-star {
+      font-size: 1rem;
+    }
+  }

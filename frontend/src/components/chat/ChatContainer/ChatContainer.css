@@ -1,0 +1,7 @@
+.chat-container{
+  display:flex;
+  height:100vh;
+  width:fit-content;
+  padding:15px;
+  background-color:rgb(65, 65, 73);
+}

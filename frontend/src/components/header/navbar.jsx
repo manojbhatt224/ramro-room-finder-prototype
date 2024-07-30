@@ -15,7 +15,6 @@ const MyNavbar = () => {
     dispatch(logout());
   };
   const handleProfileImageError=()=>{
-console.log("Image Error");
     setImageError(true);
   }
   

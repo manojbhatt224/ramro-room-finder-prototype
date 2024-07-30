@@ -45,7 +45,7 @@ useEffect(() => {
         {loading ? (
         <div className="button-content">
           <Oval visible={true} height="200" color="#000000" ariaLabel="oval-loading" />
-        </div>): (listings? listings.map((listing)=>(<Listing key={listing._id} {...listing}/> )) :<h1>No Data</h1>)}
+        </div>): (listings? listings.map((listing)=>(<Listing key={listing._id} {...listing} operation={false}/> )) :<h1>No Data</h1>)}
         </div>
       </div>
     </>

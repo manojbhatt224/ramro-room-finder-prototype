@@ -1,0 +1,24 @@
+.listing-operation{
+    padding:20px;
+    background-color:#f0f0f0;
+}
+.listings-head{
+    margin-top:15px;
+    margin-bottom:15px;
+}
+.listings{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive grid */
+    gap: 16px; /* Space between cards */
+    padding: 16px; /* Space inside container */
+  
+}
+
+@media (max-width: 768px) {
+    .listings{
+        flex-direction: column;
+    }
+}
+
+  
+  

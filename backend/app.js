@@ -8,7 +8,9 @@ import session from 'express-session';
 import passport from './config/passport-setup.js'
 import { errorHandler } from './helpers/errorHandler.js';
 import cookieParser from 'cookie-parser'
-import { handleFileUpload } from './helpers/fileUpload.js';
+import http from "http";
+import { Server as SocketIOServer } from "socket.io";
+import { setupSocket } from './socket_manager/socketManager.js';
 
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -17,6 +19,14 @@ const __dirname = path.dirname(__filename);
 
 configDotenv();
 const app= express();
+const server = http.createServer(app);
+const io = new SocketIOServer(server, {
+  cors: {
+      origin: "*",
+      methods: ["GET", "POST"],  
+      credentials: true     
+  }
+  });
 const port=process.env.PORT;
 
 // CORS Policy
@@ -52,42 +62,11 @@ app.use(passport.session());
 
 
 app.use('/api', routes)
-app.use('/checkupload',async (req, res)=>{
-  try {
-    const {files } = await handleFileUpload(req);
-    
-    const session = await mongoose.startSession();
-    session.startTransaction();
-
-    const newListing = new Listing(req.body);
-    await newListing.save({ session });
-
-    const mediaPromises = files.map((media) => {
-      const newMedia = new Media({
-        listingId: newListing._id,
-        path: media.path,
-        type: media.type,
-      });
-      return newMedia.save({ session });
-    });
-
-    await Promise.all(mediaPromises);
-
-    await session.commitTransaction();
-    session.endSession();
-
-    res.status(201).json(newListing);
-
-
-  } catch (error) {
-    console.error('Transaction aborted due to error:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-
 
 app.use(errorHandler);
-app.listen(port, ()=>{
+
+
+setupSocket(io);
+server.listen(port, ()=>{
 console.log("Serving backend at port", port)
 })

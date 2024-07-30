@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, lazy} from 'react'
+import { Oval } from 'react-loader-spinner';
 import { GoogleMap, Marker, Polygon, useJsApiLoader } from '@react-google-maps/api';
 import * as XLSX from 'xlsx'
 
@@ -30,13 +31,13 @@ const Map = () => {
  
    
     const containerStyle = {
-        width: '800px',
-        height: '800px'
+        width: '100vw',
+        height: '100vh'
       };
       
       const center = {
-        lat: 27.676059,
-        lng: 85.351487
+        lat: 27.6742646,
+        lng: 85.3422879
 
       };
       const anotherMarker = {
@@ -45,7 +46,7 @@ const Map = () => {
       };
       const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyC_siAOGtkjHJ4i_1SzyjaSV8VC83vfYAw"
+        googleMapsApiKey: "AIzaSyApJbrw1zZAbrJCz4Zrv4K_pZnjSpETvuA"
       })
      
   return (
@@ -53,22 +54,10 @@ const Map = () => {
         <GoogleMap
           mapContainerStyle={containerStyle}
           center={center}
-          zoom={30}
+          zoom={15}
         >
-     {zone.length > 0 && (
-        <Polygon
-          path={zone}
-          options={{
-            fillColor: '#FF0000',
-            fillOpacity: 0.4,
-            strokeColor: '#FF0000',
-            strokeOpacity: 1,
-            strokeWeight: 2
-          }}
-        />
-      )}
         </GoogleMap>
-    ) : <></>
+    ) : <h1><Oval visible={true} height="200" color="#000000" ariaLabel="oval-loading" /></h1>
   )
 }
 

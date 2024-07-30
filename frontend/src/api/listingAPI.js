@@ -20,7 +20,7 @@ export const getAllListingsAPI = async () => {
 
   export const getListingAPI = async (id) => {
     try {
-      const response = await axiosInstance.get('/api/listings/${id}');
+      const response = await axiosInstance.get(`/api/listings/${id}`);
       return response.data; 
     } catch (error) {
       throw error;
@@ -40,7 +40,7 @@ export const getAllListingsAPI = async () => {
   }
   export const deleteListingAPI = async (id) => {
     try {
-      const response = await axiosInstance.delete('/api/listings/${id}');
+      const response = await axiosInstance.delete(`/api/listings/${id}`);
       return response.data; 
     } catch (error) {
       throw error;

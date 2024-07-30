@@ -3,13 +3,15 @@ import { persistStore, persistReducer } from 'redux-persist';
 
 import authReducer from "./slices/authSlice"
 import listingReducer from "./slices/listingSlice"
+import usersReducer from "./slices/userSlice"
 import storage from "redux-persist/lib/storage";
 
 
 //combine all reducers
 const rootReducer=combineReducers({
   auth:authReducer,
-  listing: listingReducer
+  listing: listingReducer,
+  users: usersReducer
   })
 
 

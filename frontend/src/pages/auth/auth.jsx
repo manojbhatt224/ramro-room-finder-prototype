@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { useSelector, useDispatch} from 'react-redux';
-import { login, signup, selectLoading, selectError, selectSuccess, setError, setSuccess} from "../../slices/authSlice";
+import { login, signup, selectLoading, selectError, selectSuccess, setLoading, setError, setSuccess} from "../../slices/authSlice";
 import {Oval} from 'react-loader-spinner'
 import "./auth.css";
 import Logo from "/logo.jpg";
@@ -11,9 +11,9 @@ const Auth = () => {
   const dispatch = useDispatch();
   const loading = useSelector(selectLoading);
   const handleGoogleLogin = () => {
-      
+      dispatch(setLoading);
     window.location.href = 'http://localhost:5000/api/auth/google/callback';
-          // Optionally handle response data
+          
       }  
 
   const [confirmPass, setConfirmPass] = useState(true);
@@ -236,7 +236,12 @@ const Auth = () => {
               type="button"
                 onClick={handleGoogleLogin}
             >
-              Sign In with Google
+       
+        <div className="button-content">
+          Sign In with Google
+        </div>
+    
+              
             </button>
         </form>
       </div>    

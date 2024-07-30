@@ -45,7 +45,7 @@ export const addListing = createAsyncThunk(
 );
 export const getListing = createAsyncThunk(
   'listing/getListing',
-  async ({id}, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const response = await getListingAPI(id);
       return response.data;
@@ -56,6 +56,7 @@ export const getListing = createAsyncThunk(
 );
 
 const initialState = {
+  listing:null,
   listings:null,
   fetchError: null,
   fetchLoading:null,
@@ -77,6 +78,19 @@ export const listingSlice = createSlice({
   },
   extraReducers:(builder)=>{
     builder
+    .addCase(getListing.pending, (state) => {
+      state.fetchLoading = true;
+      state.fetchError = null;
+    })
+    .addCase(getListing.fulfilled, (state, action) => {
+      state.fetchLoading = false;
+      state.listing = action.payload.listing;
+      state.fetchError = null;
+    })
+    .addCase(getListing.rejected, (state, action) => {
+      state.fetchLoading = false;
+      state.fetchError = action.payload.data.error;
+    })
       .addCase(getMyListings.pending, (state) => {
         state.fetchLoading = true;
         state.fetchError = null;
@@ -123,6 +137,7 @@ export const listingSlice = createSlice({
 export const { setFetchError, setOperationError} = listingSlice.actions;
 
 export const selectListings=(state)=>state.listing.listings
+export const selectListing=(state)=>state.listing.listing
 export const selectFetchLoading = (state) => state.listing.fetchLoading;
 export const selectFetchError = (state) => state.listing.fetchError;
 export const selectOperationLoading = (state) => state.listing.operationLoading;

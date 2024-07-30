@@ -1,0 +1,132 @@
+.chatlistbar-container{
+  flex:1;
+  max-width:350px;
+  display:flex;
+  flex-direction:column;
+}
+
+.userInfo{
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.userInfoUser{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  h2{
+      color:white;
+  }
+  img{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      object-fit:cover;
+  }
+}
+.userInfoIcons{
+  display:flex;
+  gap:20px;
+  img{
+      width:20px;
+      height:20px;
+      cursor:pointer;
+  }
+}
+.chatlist-container {
+  overflow: auto;
+}
+
+/* For webkit browsers */
+.chatlist-container::-webkit-scrollbar {
+  width: 8px; /* Default scrollbar width */
+}
+
+.chatlist-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Slightly visible */
+  border-radius: 4px;
+}
+
+.chatlist-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4); /* Darker when hovered */
+}
+
+/* For Firefox */
+.chatlist-container {
+  scrollbar-width: thin; /* Use thin scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Slightly visible */
+}
+
+.chatlist-container{
+  padding:10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .chatListSearch{
+      display:flex;
+      align-items:center;
+      gap:20;
+      .add{
+          width:43px;
+          height:43px;
+          background-color:lightblue;
+          padding:12px;
+          border-radius:10px;
+          margin-left:2px;
+      }
+      .chatListSearchBar{
+          flex:1;
+          display:flex;
+          background-color:lightblue;
+          align-items:center;
+          gap:20px;
+          border-radius: 10px;
+          padding:10px;
+
+          input{
+              background-color:transparent;
+              border:none;
+              outline:none;
+              color:white;
+              flex:1;
+          }
+          img{
+              width:20px;
+              height:20px;
+          }
+      }
+  }
+.item{
+      display:flex;
+      align-items:center;
+      width:100%;
+      gap:20px;
+      padding:2px;
+      cursor:pointer;
+      border-bottom:1px solid #dddddd36;
+  img{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      object-fit:cover;
+  }
+  .texts{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      color:white;
+      span{
+          font-weight:500;
+      }
+      p{
+          color:white;
+          font-size:14px;
+          font-weight:300;
+      }
+  }
+  }
+
+}

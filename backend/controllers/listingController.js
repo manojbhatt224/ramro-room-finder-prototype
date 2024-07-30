@@ -3,6 +3,7 @@ import { Listing, Room, House, Flat } from "../models/listingModel.js";
 import mongoose from "mongoose";
 import { Media } from "../models/mediaModel.js";
 import fs from 'fs'
+import {getListingDetails} from '../aggregations/listingDetail.js'
 
 class ListingController {
   static async getAllListings(req, res) {
@@ -81,38 +82,11 @@ class ListingController {
   static async getListing(req, res) {
     const listingId = req.params.id;
     try {
-      const listing = await Listing.aggregate([
-        {
-          $match: { _id: new mongoose.Types.ObjectId(listingId) } // Match the specific listing by ID
-        },
-        {
-          $lookup: {
-            from: 'media', // Collection name for media
-            localField: '_id',
-            foreignField: 'listingId',
-            as: 'medias'
-          }
-        },
-        {
-          $addFields: {
-            medias: {
-              $map: {
-                input: '$medias',
-                as: 'media',
-                in: {
-                  path: '$$media.path', 
-                  type: '$$media.type'  
-                }
-              }
-            }
-          }
-        }
-      ]);
-      
+      const listing = await getListingDetails(listingId);
       if (listing.length != 0) {
-        res.sendData(200, { data: listing });
+        res.sendData(200, { listing: listing[0] });
       } else {
-        res.sendData(200, { data: {}, message: "Data not found." });
+        res.sendData(200, { listing: {}});
       }
     } catch (error) {
       res.sendData(401, { error: `${error}` });

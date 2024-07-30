@@ -6,6 +6,9 @@ import { CiSettings } from "react-icons/ci";
 import { FaHouseUser } from "react-icons/fa";
 import { TbBrandBooking } from "react-icons/tb";
 import { MdOutlineTravelExplore } from "react-icons/md";
+import { IoChatbubblesOutline } from "react-icons/io5";
+import { MdFavoriteBorder } from "react-icons/md";
+
 import './SideBar.css'; // Import your custom CSS for styling
 
 const Sidebar = () => {
@@ -25,9 +28,17 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div className={`sidebar ${isOpen ? 'open' : ''}`}>
         <div className="nav flex-column nav-pills">
-          <Link to="/dashboard" className="nav-link text-primary fs-5 my-1" aria-current="page">
+        <Link to="/dashboard" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <MdDashboard className="fs-2" />
             <span className="ms-2 d-none d-sm-inline">Dashboard</span>
+          </Link>
+          <Link to="/dashboard/favourites" className="nav-link text-primary fs-5 my-1" aria-current="page">
+          <MdFavoriteBorder className="fs-2" />
+            <span className="ms-2 d-none d-sm-inline">Favourites</span>
+          </Link>
+          <Link to="/dashboard/chats" className="nav-link text-primary fs-5 my-1" aria-current="page">
+          <IoChatbubblesOutline className="fs-2" />
+            <span className="ms-2 d-none d-sm-inline">Chats</span>
           </Link>
           <Link to="/dashboard/explore" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <MdOutlineTravelExplore className="fs-2" />

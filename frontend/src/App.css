@@ -8,24 +8,10 @@
   }
   .main {
     margin-top:65px;
+    width:100%;
+    background-color: #f0f0f0;
+    height:100vh;
   }
   
-  .page-container {
-    background-color: #ffffff; /* White background for pages */
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a card-like effect */
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
+
   
-  h1 {
-    color: #007bff; /* Blue heading */
-  }
-  
-  h2 {
-    color: #0056b3; /* Light blue heading */
-  }
-  
-  p {
-    color: #333;
-  }
