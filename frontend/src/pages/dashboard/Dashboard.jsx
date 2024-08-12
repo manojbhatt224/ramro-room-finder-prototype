@@ -10,10 +10,14 @@ const Listings = lazy(() => import('../../components/listings/Listings'));
 // import Listings from "../../components/listings/Listings";
 const Explore =lazy(()=>import("../explore/Explore"));
 import ChatContainer from "../../components/chat/ChatContainer/ChatContainer";
-import { Oval } from "react-loader-spinner";
+import DLoader from "../../components/loaderDashboard/dLoader";
+import SinglePage from "../explore/SinglePage";
+const ListingDetail = lazy(()=>import("../../components/listing/ListingDetail"));
+import { SocketProvider } from "../../context/SocketContext";
+
 const Dashboard = () => {
-  const user = useSelector(selectUser);
   return (
+  <SocketProvider>
   <div className="dashboard-wrapper">
   <div className="dashboard-sidebar">
   <SideBar/>
@@ -23,13 +27,15 @@ const Dashboard = () => {
   <Route path="/" element={<Summary/>}/>
   <Route path="/favourites/*" element={<Favourites/>}/>
   <Route path="/chats/*" element={<ChatContainer/>}/>
-  <Route path="/listings/*" element={   <Suspense fallback={<Oval visible={true} height="200" color="#000000" ariaLabel="oval-loading" />}>
+  <Route path="/listings/*" element={   <Suspense fallback={<DLoader/>}>
   <Listings/>
       </Suspense>}/>
-  <Route path="/explore/*" element={<Suspense fallback={<Oval visible={true} height="200" color="#000000" ariaLabel="oval-loading" />}><Explore/></Suspense>}/>
+  <Route path="/detail/:listingId" element={<Suspense fallback={<DLoader/>} ><SinglePage/></Suspense>}/>
+  <Route path="/explore/*" element={<Suspense fallback={<DLoader/>}><Explore/></Suspense>}/>
   </Routes>
   </div>
   </div>
+  </SocketProvider>
 );
 };
 export default Dashboard;

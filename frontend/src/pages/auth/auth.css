@@ -6,7 +6,7 @@
     align-items: center;
     height: 100vh;
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background: linear-gradient(to right, #6a11cb, #808792);
   }
   
   .a-left {
@@ -25,11 +25,11 @@
   
   .Webname {
     text-align: center;
-    color: blue;
+    color: white;
   }
   
   .app-subtitle{
-    font-size:15px;
+    font-size:1.5rem;
   }
   
   .a-right {

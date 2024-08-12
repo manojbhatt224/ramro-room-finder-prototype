@@ -30,31 +30,31 @@ const Sidebar = () => {
         <div className="nav flex-column nav-pills">
         <Link to="/dashboard" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <MdDashboard className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Dashboard</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Dashboard</span> */}
           </Link>
           <Link to="/dashboard/favourites" className="nav-link text-primary fs-5 my-1" aria-current="page">
           <MdFavoriteBorder className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Favourites</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Favourites</span> */}
           </Link>
           <Link to="/dashboard/chats" className="nav-link text-primary fs-5 my-1" aria-current="page">
           <IoChatbubblesOutline className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Chats</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Chats</span> */}
           </Link>
           <Link to="/dashboard/explore" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <MdOutlineTravelExplore className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Explore</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Explore</span> */}
           </Link>
           <Link to="/dashboard/listings" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <FaHouseUser className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">My Listings</span>
+            {/* <span className="ms-2 d-none d-sm-inline">My Listings</span> */}
           </Link>
           <a href="#" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <TbBrandBooking className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Bookings</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Bookings</span> */}
           </a>
           <a href="#" className="nav-link text-primary fs-5 my-1" aria-current="page">
             <CiSettings className="fs-2" />
-            <span className="ms-2 d-none d-sm-inline">Settings</span>
+            {/* <span className="ms-2 d-none d-sm-inline">Settings</span> */}
           </a>
         </div>
       </div>

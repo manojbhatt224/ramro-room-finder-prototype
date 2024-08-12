@@ -1,3 +1,4 @@
+import { findReviewWithPermissionDetails } from "../aggregations/listing.js";
 import { Review } from "../models/reviewModel.js";
 
 class ReviewController {
@@ -15,11 +16,7 @@ else{
     res.sendData(400,{error:"Listing Id is Required!"})
 }
   }
-  static async getReview(req, res) {
 
-    try {
-    } catch (error) {}
-  }
   static async addReview(req, res) {
     const userId = req.user._id;
     const { listingId, comment, rating } = req.body;
@@ -31,7 +28,10 @@ else{
         if (newReview._id) res.sendData(200, { review: newReview });
         else res.sendData(401, { error: "Error from third party database." });
       } catch (error) {
-        res.sendData(401, { error: error });
+        if(error.errorResponse?.errmsg.includes("E11000 duplicate key error"))
+        res.sendData(401, { error: "Can't review multiple times."});
+      else
+      res.sendData(401, { error: error.errorResponse?.errmsg});
       }
     } else {
       res.sendData(401, { error: "Required All Values" });
@@ -40,14 +40,23 @@ else{
   static async updateReview(req, res) {
     const userId = req.user._id.toString();
     const reviewId = req.params.id;
+    console.log(req.body);
+
     const { listingId, comment, rating } = req.body;
+    console.log(userId !== review?.userId.toString());
+console.log(listingId !== review?.listingId.toString());
+
     try {
-      var review = await Review.findOne({ _id: reviewId });
+      var review = await findReviewWithPermissionDetails(reviewId);
+      console.log("Requesting User", userId);
+      console.log("Review Id:", reviewId);
+      console.log("listingId",listingId );
+      console.log(review);
       if (!review?._id.toString()){
         res.sendData(400,{error:"No Such Review to Update!"})
       }
       else{
-        if (userId !== review?.userId.toString() || listingId !== review?.listingId.toString()) {
+        if (listingId !== review?.listingId.toString() && (userId !== review?.reviewOwner?._id.toString() || userId!==review?.listingOwner?._id.toString())) {
             res.sendData(400, {
               error: "Only authorized user with matching listing can be updated!",
             });

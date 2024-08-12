@@ -9,18 +9,25 @@ import {
 
 import "./ChatListBar.css";
 import { Oval } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
 
-function ChatListBar({ onUserClick }) {
+function ChatListBar() {
+  const navigate=useNavigate();
   const myself = useSelector(selectUser);
   const dispatch = useDispatch();
   const chatUsers = useSelector(selectUsers);
   const usersLoading = useSelector(selectUsersLoading);
   const items = [1, 2, 3, 4];
+
+  const onUserClick=async(userId)=>{
+    navigate(`/dashboard/chats/${userId}`);
+  }
   useEffect(() => {
     async function fetchUsers() {
       await dispatch(getAllUsers());
     }
     fetchUsers();
+    console.log(chatUsers);
   }, []);
 
   const chats = [
@@ -83,16 +90,14 @@ function ChatListBar({ onUserClick }) {
           chatUsers &&
           chatUsers
             .filter((user) => user._id !== myself._id)
-            .map((user) => (
+            .map((user) => ( 
               <div
                 key={user._id}
                 className="item"
-                onClick={() => {
-                  onUserClick(user);
-                }}
+                onClick={()=>onUserClick(user._id)}
               >
-                {user.photourl ? (
-                  <img src={user.photourl} alt="Profile" />
+                {user?.photourl ? (
+                  <img src={user?.photourl} alt="Profile" />
                 ) : (
                   <div
                     style={{

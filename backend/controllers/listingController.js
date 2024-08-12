@@ -3,39 +3,19 @@ import { Listing, Room, House, Flat } from "../models/listingModel.js";
 import mongoose from "mongoose";
 import { Media } from "../models/mediaModel.js";
 import fs from 'fs'
-import {getListingDetails} from '../aggregations/listingDetail.js'
+import {getListingDetails, getListingsWithOwner, getUserListingsWithOwner} from '../aggregations/listing.js'
 
 class ListingController {
   static async getAllListings(req, res) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
     try {
-      const listings = await Listing.aggregate([
-        {
-          $lookup: {
-            from: 'media',
-            localField: '_id',
-            foreignField: 'listingId',
-            as: 'medias'
-          }
-        },
-        {
-          $addFields: {
-            medias: {
-              $map: {
-                input: '$medias',
-                as: 'media',
-                in: {
-                  path: '$$media.path', 
-                  type: '$$media.type' 
-                }
-              }
-            }
-          }
-        },
-      ]);
-      if (listings.length != 0) {
-        res.sendData(200, { listings: listings });
+      const finalData = await getListingsWithOwner(page,limit);
+      
+      if (finalData?.listings?.length != 0) {
+        res.sendData(200, { ...finalData });
       } else {
-        res.sendData(200, { listings:[], message: "Data not found." });
+        res.sendData(200, { listings:[]});
       }
     } catch (error) {
       res.sendData(401, { error: `${error}` });
@@ -43,33 +23,7 @@ class ListingController {
   }
   static async getMyListings(req, res) {
     try {
-      const listings = await Listing.aggregate([
-        {
-          $match: { userId: new mongoose.Types.ObjectId(req.user._id) } // Match the specific listing by ID
-        },
-        {
-          $lookup: {
-            from: 'media',
-            localField: '_id',
-            foreignField: 'listingId',
-            as: 'medias'
-          }
-        },
-        {
-          $addFields: {
-            medias: {
-              $map: {
-                input: '$medias',
-                as: 'media',
-                in: {
-                  path: '$$media.path', 
-                  type: '$$media.type' 
-                }
-              }
-            }
-          }
-        },
-      ]);
+      const listings = await getUserListingsWithOwner(req.user._id)
       if (listings.length != 0) {
         res.sendData(200, { listings: listings });
       } else {
@@ -95,11 +49,15 @@ class ListingController {
   static async addListing(req, res) {
     try {
       const { files, fields } = await handleFileUpload(req);
+      console.log(fields);
       const {
         userId,
         title,
         description,
         price,
+        location,
+        latitude,
+        longitude,
         type,
         hall,
         bedrooms,
@@ -116,6 +74,9 @@ class ListingController {
         let listingData = {
           userId,
           title,
+          location,
+          longitude,
+          latitude,
           description,
           type,
           price,
@@ -129,7 +90,7 @@ class ListingController {
             !description ||
             !price ||
             !area ||
-            !maxPeople
+            !maxPeople || !latitude || !longitude || !location
           ) {
             return res
               .status(401)
@@ -144,7 +105,7 @@ class ListingController {
             !price ||
             !area ||
             !bedrooms ||
-            !maxPeople
+            !maxPeople || !latitude || !longitude || !location
           ) {
             return res
               .status(401)
@@ -156,7 +117,7 @@ class ListingController {
           listingData.bedrooms = bedrooms;
           newListing = new Flat(listingData);
         } else if (type === "House") {
-          if ((userId && !title) || !description || !price || !area || !rooms) {
+          if ((userId && !title) || !description || !price || !area || !rooms || !latitude || !longitude || !location) {
             return res
               .status(401)
               .json({ error: "Incomplete details for House!" });

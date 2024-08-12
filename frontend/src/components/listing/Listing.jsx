@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { IoNavigateCircleOutline } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { BiDetail } from "react-icons/bi";
 import "./Listing.css";
+
 
 const Listing = ({
   _id,
@@ -23,6 +25,7 @@ const Listing = ({
   rooms,
   medias,
   operation,
+  ownerDetails
 }) => {
   return (
     <div className="card">
@@ -100,37 +103,7 @@ const Listing = ({
         <p className="card-text">{description}</p>
         </div>
         
-        {/*
-        <p className="card-text">
-          <span className="label">Area:</span> {area}
-        </p>
-        <p className="card-text">
-          <span className="label">Parking:</span>{" "}
-          {parking ? "Available" : "N/A"}
-        </p>
-        <p className="card-text">
-          <span className="label">Bed:</span> {bed ? "Available" : "N/A"}
-        </p>
-        <p className="card-text">
-          <span className="label">Allowed People:</span> {maxPeople}
-        </p>
-        <p className="card-text">
-          <span className="label">Kitchen:</span>{" "}
-          {kitchen ? "Available" : "N/A"}
-        </p>
-        <p className="card-text">
-          <span className="label">Hall:</span> {hall ? "Available" : "N/A"}
-        </p>
-        <p className="card-text">
-          <span className="label">Bed Rooms:</span> {bedrooms}
-        </p>
-        <p className="card-text">
-          <span className="label">Garden:</span> {garden ? "Available" : "N/A"}
-        </p>
-        <p className="card-text">
-          <span className="label">Rooms:</span> {rooms}
-        </p> */}
-
+      
         <div className="card-options">
         
           {operation && (
@@ -144,9 +117,9 @@ const Listing = ({
               </a>
             </>
           )}
-           <a href="#" >
+           <Link to={`/dashboard/detail/${_id}`} >
            <BiDetail className="operation-icon text-success " />
-          </a>              
+          </Link>              
             <IoNavigateCircleOutline className="operation-icon text-dark"
           />
       
@@ -160,8 +133,20 @@ const Listing = ({
           />
         </div>
         <div className="owner-wrapper">
-          <img src="/avatar.png" alt=""
+        {ownerDetails?.photourl ? (
+          <img
+            src={ownerDetails?.photourl}
+            alt="Profile"
+            className="ld-review-img"
           />
+        ) : (
+          <div
+            style={{ textAlign: "center" }}
+            className="img-error"
+          >
+            {ownerDetails?.firstName?.charAt(0).toUpperCase()}
+          </div>
+        )}
         </div>
       </div>
     </div>

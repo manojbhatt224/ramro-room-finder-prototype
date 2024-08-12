@@ -17,9 +17,11 @@ export const getMyListings = createAsyncThunk(
 
 export const getAllListings = createAsyncThunk(
   'listing/getAllListings',
-  async (_, { rejectWithValue }) => {
+  async (_, { getState,rejectWithValue }) => {
+    const state=getState();
+    const page=state.listing.page
     try {
-      const response = await getAllListingsAPI();
+      const response = await getAllListingsAPI(page, 3);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -57,11 +59,13 @@ export const getListing = createAsyncThunk(
 
 const initialState = {
   listing:null,
-  listings:null,
+  page:1,
+  listings:[],
+  fetchHasMore:true,
   fetchError: null,
-  fetchLoading:null,
+  fetchLoading:false,
   operationError: null,
-  operationLoading: null,
+  operationLoading: false,
   operationSuccess: null 
 };
 
@@ -69,6 +73,12 @@ export const listingSlice = createSlice({
   name: 'listing',
   initialState,
   reducers: {
+    resetListings(state) {
+      state.listings = [];
+      state.page = 1;
+      state.fetchHasMore=true;
+
+    },
     setFetchError: (state, action) => {
       state.fetchError = action.payload;
     },
@@ -110,8 +120,10 @@ export const listingSlice = createSlice({
       })
       .addCase(getAllListings.fulfilled, (state, action) => {
         state.fetchLoading = false;
-        state.listings = action.payload.listings;
+        state.listings = [...state.listings, ...action.payload.listings];
+        state.page+=1;
         state.fetchError = null;
+        state.fetchHasMore = action.payload.currentPage < action.payload.totalPages;
       })
       .addCase(getAllListings.rejected, (state, action) => {
         state.fetchLoading = false;
@@ -134,9 +146,11 @@ export const listingSlice = createSlice({
   }
 });
 
-export const { setFetchError, setOperationError} = listingSlice.actions;
+export const { setFetchError, setOperationError, resetListings} = listingSlice.actions;
 
 export const selectListings=(state)=>state.listing.listings
+export const selectPage=(state)=>state.listing.page
+export const selectFetchHasMore=(state)=>state.listing.fetchHasMore
 export const selectListing=(state)=>state.listing.listing
 export const selectFetchLoading = (state) => state.listing.fetchLoading;
 export const selectFetchError = (state) => state.listing.fetchError;

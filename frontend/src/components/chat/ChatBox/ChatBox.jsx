@@ -1,69 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectToken, selectUser } from "../../../slices/authSlice";
 
+import { getUser,selectUser, selectUserLoading } from "../../../slices/userSlice";
+
+import { useSelector, useDispatch } from "react-redux";
+import { selectUser as selectAuthUser } from "../../../slices/authSlice";
 import "./ChatBox.css";
 import io from "socket.io-client";
+import { useParams } from "react-router-dom";
+import { useSocket } from "../../../context/SocketContext";
 
-function ChatBox({ selectedUser }) {
+function ChatBox() {
+  const { userId } = useParams();
+  const { socket} = useSocket();
+  const dispatch=useDispatch();
+  const myself=useSelector(selectAuthUser);
+  const loading=useSelector(selectUserLoading);
+  const chatUser=useSelector(selectUser);
+  var count=0;
+  const [roomId, setRoomId]=useState('');
+
+
+// Fetch user and set roomId when userId changes
+useEffect(() => {
+  const fetchUser = async () => {
+    await dispatch(getUser(userId));
+  };
+  fetchUser();
+}, [userId, dispatch]);
+
+// Set roomId when chatUser is available
+useEffect(() => {
+  if (myself && chatUser && chatUser._id) {
+    const room = [myself._id, chatUser._id].sort().join('_');
+    setRoomId(room);
+  }
+}, [myself, chatUser]);
+
+// Join the room when roomId is set
+useEffect(() => {
+  if (roomId) {
+    socket?.emit('joinRoom', { roomId });
+    console.log("Joined room:", roomId);
+  }
+}, [roomId, socket]);
+
+
+
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
   const user = useSelector(selectUser);
-  const token = useSelector(selectToken);
-  const chatDistributer = [1, 2];
-  const [globalSocket, setGlobalSocket] = useState(null);
   useEffect(() => {
-    // Initialize the socket connection with the token
-    const socket = io(`${import.meta.env.VITE_BACKEND_URL}`, {
-      extraHeaders: {
-        token: token.accessToken,
-      },
-    });
-    setGlobalSocket(socket);
+    const handleMessage=async (message)=>{
+      await setMessages((prevMessages) => [...prevMessages, message]);
+      
+      console.log('Message received:', message);
+      console.log('Messages', messages)
+    }
 
-    // Handle connection errors
-    socket.on("connect_error", (err) => {
-      setError(err);
-      console.log(err);
-    });
-
-    // Listen for messages from the server
-    socket.on("message", async (message) => {
-      await setMessages((prevMessages) => {
-        prevMessages.push(message.text);
-        return prevMessages;
-      });
-      console.log(messages);
-    });
-
+    
+    socket?.on("message", handleMessage);
+    console.log(messages)
     // Clean up the effect
     return () => {
-      socket.off("message");
-      socket.off("connect_error");
+      socket?.off("message", handleMessage);
     };
-  }, [messages]);
+  }, []);
 
-  const sendMessage = () => {
+  const sendMessage = async(e) => {
+    e.preventDefault();
     if (text.trim()) {
+      count++;
       // Send message to the server
-      globalSocket.emit("message", {receiver:selectedUser._id, text: text.trim()})};
+      socket.emit("message", {_id: count, roomId:roomId, receiver:chatUser._id, text: text.trim()})};
       setText("");
+      // await setMessages((prevMessages) => [...prevMessages, {_id: count, receiver:chatUser._id, text: text.trim()}]);
     }
   
 
   return (
-    <div className="chatbox-container">
-      {!selectedUser && (
+    <>
+      <div className="chatbox-container">
+      {!chatUser && (
         "Please select any chat to continue"
       ) } 
-      
-     {selectedUser && (
+     {chatUser && !loading && (
         <>
-          <div className="chatbox-top">
+         <div className="chatbox-top">
             <div className="chatbox-user">
-              {selectedUser.photourl ? (
-                <img src={selectedUser.photourl} alt="Profile" />
+              {chatUser.photourl ? (
+                <img src={chatUser.photourl} alt="Profile" />
               ) : (
                 <div
                   style={{
@@ -77,12 +103,12 @@ function ChatBox({ selectedUser }) {
                     backgroundColor: "#ccc", // Optional: Adds a background color for better visibility
                   }}
                 >
-                  {selectedUser.firstName.charAt(0).toUpperCase()}
+                  {chatUser.firstName.charAt(0).toUpperCase()}
                 </div>
               )}
               <div className="chatbox-texts">
                 <span>
-                  {selectedUser.firstName + " " + selectedUser.lastName}
+                  {chatUser.firstName + " " + chatUser.lastName}
                 </span>
                 <p>Active Now</p>
               </div>
@@ -98,20 +124,20 @@ function ChatBox({ selectedUser }) {
               return(
 
                 <div
-                style={{ alignSelf: message.receiver  === user._id ? "flex-end" : "" }}
+                style={{ alignSelf: message.receiverId  === user._id ? "flex-end" : "" }}
                 className="chatbox-message"
-                key={message.text}
+                key={message._id}
                
               >
-                {message.receiver!==user._id && <img src="/images/avatar.png" alt="Avatar" />}
+                {message.receiverId!==user._id && <img src="/images/avatar.png" alt="Avatar" />}
                 <div className="chatboxmessage-texts">
                   <p
                     style={{
                       backgroundColor:
-                        message.receiver!==user._id ? "lightblue" : "lightgrey",
+                        message.receiverId!==user._id ? "lightblue" : "lightgrey",
                     }}
                   >
-                    {message.text}
+                    {message?.text}
                   </p>
                   <span>1 min ago</span>
                 </div>
@@ -119,7 +145,7 @@ function ChatBox({ selectedUser }) {
               )
 
             })}
-            {chatDistributer.map((x) => {
+            {/* {chatDistributer.map((x) => {
               return (
                 <div
                   style={{ alignSelf: x % 2 === 0 ? "" : "flex-end" }}
@@ -142,7 +168,7 @@ function ChatBox({ selectedUser }) {
                   </div>
                 </div>
               );
-            })}
+            })} */}
           </div>
           <div className="chatbox-bottom">
             <div className="chatboxBottom-icons">
@@ -168,6 +194,7 @@ function ChatBox({ selectedUser }) {
         </>
       )}
     </div>
+    </>
   );
 }
 

@@ -1,22 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectListing, getListing } from "../../slices/listingSlice";
+import {
+  selectOperationError,
+  selectOperationLoading,
+  addReview, updateReview,
+  setOperationError,
+} from "../../slices/reviewSlice";
+import { useParams } from "react-router-dom";
 
-import { IoNavigateCircleOutline } from "react-icons/io5";
-import { FaHeart } from "react-icons/fa";
-import { CiEdit } from "react-icons/ci";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { BiDetail } from "react-icons/bi";
 import "./ListingDetail.css";
 import { FaStar } from "react-icons/fa";
+import {Oval} from 'react-loader-spinner'
+import Review from "../review/Review";
+import Swal from "sweetalert2";
 
 const ListingDetail = () => {
+  const { listingId } = useParams();
+  const [updateState, setUpdateState]=useState(false);
+  const [reviewId, setReviewId]=useState(null);
+  const addReviewError = useSelector(selectOperationError);
+  const addReviewLoading = useSelector(selectOperationLoading);
   const listing = useSelector(selectListing);
   const dispatch = useDispatch();
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
 
+  const resetStates=()=>{
+    setUpdateState(false);
+    setRating(0);
+    setComment('');
+  }
+  const setUpdateData=(reviewId, comment, rating)=>{
+    setUpdateState(true);
+    setComment(comment);
+    setRating(rating);
+    setReviewId(reviewId);
+  }
   const handleRating = (rate) => {
     setRating(rate);
   };
@@ -25,19 +46,85 @@ const ListingDetail = () => {
     setHoverRating(rate);
   };
 
-  const handleSubmit = () => {
-    console.log("Submitting...");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  if (rating && comment) {
+    if (!updateState){
+      await dispatch(addReview({ listingId, comment, rating }));
+    }
+    else{
+      if(!reviewId){
+        console.log("No review id!");
+      }
+      else
+      {
+        console.log(reviewId, comment, rating);
+      await dispatch(updateReview({id:reviewId, updateData: {comment, rating, listingId}}))
+      }
+
+    }
+      resetStates();
+      fetchListing();
+    } else {
+      Swal.fire({
+        text: "Rating and comment needed!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          return;
+        } else {
+          return;
+        }
+      });
+    }
   };
+  const fetchListing = async () => {
+    await dispatch(getListing(listingId));
+    console.log(listing);
+  };
+  useEffect(() => {
+    if (addReviewError) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: addReviewError,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(setOperationError(null));
+        } else {
+          dispatch(setOperationError(null));
+        }
+      });
+    }
+  }, [addReviewError]);
 
   useEffect(() => {
-    const fetchListing = async () => {
-      await dispatch(getListing("669f939ebb0a6675e7c226d0"));
-    };
     fetchListing();
   }, []);
   return (
     <div className="listingdetail-wrapper">
-      <h1>{listing?.title}</h1>
+      <h1>
+        {listing?.type} : {listing?.title}
+      </h1>
+      <div className="listing-owner-info">
+        <h3>Owner Information</h3>
+        <p>
+          Name: {listing?.ownerDetails?.firstName}{" "}
+          {listing?.ownerDetails?.lastName}
+        </p>
+        <p>Email: {listing?.ownerDetails?.email}</p>
+      </div>
+      <div className="listing-info">
+        <h3>Listing Information</h3>
+        <p>Description: {listing?.description}</p>
+        <p>Area: {listing?.area} sq feet</p>
+        {listing?.rooms && <p>Rooms: ${listing?.rooms}</p>}
+        {listing?.bedrooms && <p>Bedrooms: {listing?.bedrooms}</p>}
+        {listing?.maxPeople && <p>Max. People Allowed: {listing?.maxPeople}</p>}
+        {listing?.kitchen && (
+          <p>Kitchen: {listing?.kitchen ? "Available" : "N/A"}</p>
+        )}
+      </div>
+
       <div
         id="carouselExampleIndicators"
         className="carousel slide ld-image-wrapper"
@@ -120,55 +207,36 @@ const ListingDetail = () => {
               />
             ))}
           </div>
-          <button className="ld-submit-button" onClick={handleSubmit}>
-            Submit
+          <button disabled={addReviewLoading} className="ld-submit-button" onClick={handleSubmit}>
+            {addReviewLoading ? (
+              <div className="button-content">
+                <Oval
+                  visible={true}
+                  height="20"
+                  color="#f0f0f0"
+                  ariaLabel="oval-loading"
+                />
+              </div>
+            ) : (
+              <div className="button-content">{updateState? 'Update Review': 'Add Review'}</div>
+            )}
           </button>
         </div>
       </div>
 
       <div className="ld-user-reviews">
-      {listing?.reviews && listing.reviews.length > 0 ? (
-    listing.reviews.map((review, index) => (
-      <div key={index} className="ld-review">
-        {review.userDetails?.photourl ? (
-          <img
-            src={review.userDetails.photourl}
-            alt="Profile"
-            className="ld-review-img"
-          />
-        ) : (
-          <div
-            style={{ textAlign: "center" }}
-            className="ld-review-error-img"
-          >
-            {review.userDetails?.firstName?.charAt(0).toUpperCase()}
-          </div>
-        )}
+        <h2>Reviews and ratings:</h2>
+        <hr />
 
-        <div className="ld-review-content">
-          <h4 className="ld-review-name">
-            {review.userDetails?.firstName} {review.userDetails?.lastName}
-          </h4>
-          <div className="ld-review-stars">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <FaStar
-                key={star}
-                className={`ld-review-star ${
-                  review.rating >= star ? "ld-filled" : ""
-                }`}
-              />
-            ))}
-          </div>
-          <p className="ld-review-comment">{review.comment}</p>
-        </div>
+        {listing?.reviews && listing.reviews.length > 0 ? (
+          [...listing.reviews]
+            .reverse()
+            .map((review, index) => <Review key={index} {...review} ownerId={listing?.ownerDetails?._id} setReviewForUpdate={setUpdateData} />)
+        ) : (
+          <h5>No Reviews Yet</h5>
+        )}
       </div>
-    ))
-  ) : (
-    <h3>No Reviews Yet</h3>
-  )}
-</div>   
-     </div>
-    
+    </div>
   );
 };
 

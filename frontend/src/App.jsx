@@ -11,6 +11,7 @@ import {Routes, Route, Navigate} from 'react-router-dom'
 import Dashboard from './pages/dashboard/Dashboard'
 import RedirectionSSO from './pages/ssoredirection/RedirectionSSO'
 import ErrorPage from './pages/errorpage/ErrorPage'
+import TestMap from './components/map/TestMap';
 function App() {
   const isAuthenticated= useSelector(selectIsAuthenticated);
    return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/dashboard/*" element={isAuthenticated?<Dashboard/>:<Navigate to="/auth"/>}/>
             <Route path="/redirectsso" element={<RedirectionSSO/>}/>
             <Route path="/error" element={<ErrorPage/>}/>
+            <Route path="/testmap" element={<TestMap/>}/>
           </Routes>
         </div>
   

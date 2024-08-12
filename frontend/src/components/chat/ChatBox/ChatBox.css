@@ -1,9 +1,9 @@
 .chatbox-container{ 
   border-left:1px solid #dddddd36;
-  width:100%;
-  height:100%;
-  flex:2;
+  width:70vw;
+  height:95%;
   display:flex;
+
   flex-direction:column;
   /* background-color:aqua; */
   .chatbox-top{

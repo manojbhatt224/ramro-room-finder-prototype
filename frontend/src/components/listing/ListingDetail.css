@@ -8,6 +8,26 @@
     align-items: center;
   }
   
+  .listing-owner-info, .listing-info {
+    background: linear-gradient(to right, #786c94, #b2c8ee);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 1000px;
+  }
+  
+  .listing-owner-info h3, .listing-info h3 {
+    font-size: 2em;
+    margin-bottom: 10px;
+  }
+  
+  .listing-owner-info p, .listing-info p {
+    font-size: 1.2em;
+    margin: 5px 0;
+  }
    
   .ld-images {
     width:90%;
@@ -99,61 +119,7 @@
     box-sizing: border-box;
   }
   
-  .ld-review {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
   
-  .ld-review-img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 5px;
-    border: 1px solid rgb(184, 179, 179);
-  }
-  .ld-review-error-img{
-    display:flex;
-    justify-content:center;
-    width: 40px; /* Adjust size as needed */
-    height: 40px; /* Adjust size as needed */
-    border-radius: 50%;
-    border: 1px solid rgb(155, 147, 147);
-    align-items:center;
-    margin-right: 5px;
-    background-color:rgb(185, 156, 156);
-    color:white;
-  }
-  
-  .ld-review-content {
-    flex: 1;
-    margin-left:10px;
-  }
-  
-  .ld-review-name {
-    font-size: 1.2rem;
-    margin: 0 0 5px 0;
-  }
-  
-  .ld-review-stars {
-    display: flex;
-  }
-  
-  .ld-review-star {
-    font-size: 1.2rem;
-    color: #a78c8c;
-    margin-right: 5px;
-  }
-  
-  .ld-review-star.ld-filled {
-    color: #ffc107;
-  }
-  
-  .ld-review-comment {
-    margin: 10px 0 0 0;
-  }
-
 /* courousal */
 .ld-image-wrapper {
     display: flex;

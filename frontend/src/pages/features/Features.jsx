@@ -3,7 +3,8 @@ import './Features.css'
 
 const Features = () => {
   return (
-    <div className="container page-container">
+    <div className="features-container">
+    <div className="features-page-container">
       <h1>Features</h1>
       <ul className="features-list">
         <li>Flexible rental periods</li>
@@ -12,6 +13,7 @@ const Features = () => {
         <li>Easy booking and cancellation</li>
       </ul>
     </div>
+  </div>
   )
 }
 

@@ -1,16 +1,51 @@
-.page-container {
-    background-color: #ffffff; /* White background for pages */
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Box shadow for a card-like effect */
-    border-radius: 8px;
-    margin-bottom: 20px;
-  }
-.features-list {
-    padding: 35px;
-    background-color: #eaf5ff;
+.features-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #6a11cb, #808792);
+  color: white;
+  text-align: center;
+}
 
+.features-page-container {
+  padding: 30px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width:100%;
+  max-width: 600px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.features-page-container h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  font-size: 1.5em;
+}
+
+.features-list li {
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.features-list li:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .features-list li {
-    margin-bottom: 10px;
+  to {
+    opacity: 1;
   }
+}

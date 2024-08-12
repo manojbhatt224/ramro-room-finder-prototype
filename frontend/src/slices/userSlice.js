@@ -15,7 +15,7 @@ export const getAllUsers = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
     'users/getUser',
-    async ({id}, { rejectWithValue }) => {
+    async (id, { rejectWithValue }) => {
       try {
         const response = await getUserAPI(id);
         return response.data;
@@ -65,12 +65,14 @@ export const getUser = createAsyncThunk(
             state.userError = null;
         })
         .addCase(getUser.fulfilled, (state, action) => {
-            state.userLoading = null;
+            state.userLoading = false;
+            console.log("Success Payload", action.payload)
             state.user = action.payload.user;
             state.userError = null;
         })
         .addCase(getUser.rejected, (state, action) => {
             state.userLoading = false;
+            console.log("Error Payload", action.payload)
             state.userError = action.payload.data.error;
        })
     }
@@ -83,7 +85,7 @@ export const getUser = createAsyncThunk(
   export const selectUsersError = (state) => state.users.usersError;
   export const selectUsersLoading = (state) => state.users.usersLoading;
   export const selectUserError = (state) => state.users.userError;
-  export const selectUserLoading = (state) => state.users.userSuccess;
+  export const selectUserLoading = (state) => state.users.userLoading;
   
   
   export default usersSlice.reducer;

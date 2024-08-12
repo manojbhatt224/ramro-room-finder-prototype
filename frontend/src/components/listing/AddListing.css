@@ -1,9 +1,15 @@
+.add-listing{
+    display:flex;
+}
 .add-listing-form{
+    flex:2;
     /* padding:10px; */
 }
-.add-listing-row{
-
+.add-listing-map{
+    flex:2;
+border:1px solid rgb(88, 84, 84);
 }
+
 .add-listing-field{
     margin-top: 5px;
     margin-bottom:5px; 

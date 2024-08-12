@@ -11,7 +11,7 @@ export const getAllUsersAPI = async () => {
 
 export const getUserAPI = async (id) => {
   try {
-    const response = await axiosInstance.get("/api/users/${id}");
+    const response = await axiosInstance.get(`/api/users/${id}`);
     return response.data;
   } catch (error) {
     throw error;

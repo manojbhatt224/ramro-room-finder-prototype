@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUser } from "../../../slices/authSlice";
+import { useNavigate } from "react-router-dom";
 import {
   selectUsersLoading,
   selectUsers,
@@ -9,12 +10,17 @@ import {
 import "./ChatList.css";
 import { Oval } from "react-loader-spinner";
 
-const ChatList = ({onUserClick}) => {
+const ChatList = () => {
+  const navigate = useNavigate();
+
   const myself = useSelector(selectUser);
   const dispatch = useDispatch();
   const chatUsers = useSelector(selectUsers);
   const usersLoading = useSelector(selectUsersLoading);
   const items = [1, 2, 3, 4];
+  const onUserClick=async(userId)=>{
+    navigate(`dashboard/chats/${userId}`);
+  }
   useEffect(() => {
     async function fetchUsers() {
       await dispatch(getAllUsers());
@@ -36,7 +42,7 @@ const ChatList = ({onUserClick}) => {
         chatUsers
           .filter((user) => user._id !== myself._id)
           .map((user) => (
-            <div key={user._id} className="item" onClick={()=>{onUserClick(user)}}>
+            <div key={user._id} className="item" onClick={()=>onUserClick(user._id)}>
               {user.photourl ? (
                 <img src={user.photourl} alt="Profile" />
               ) : (

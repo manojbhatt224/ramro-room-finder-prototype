@@ -1,25 +1,66 @@
+
+
+.pricings-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #6a11cb, #808792);
+  color: white;
+  text-align: center;
+}
+
+.pricings-page-container {
+  padding: 30px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width:50%;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.pricings-page-container h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+}
+
 .pricing-plan {
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #eaf5ff; /* Light blue background for plans */
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+.pricing-plan:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.pricing-plan h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.pricing-plan p {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.pricing-plan ul {
+  list-style: none;
+  padding: 0;
+  font-size: 1.2em;
+}
+
+.pricing-plan ul li {
+  margin: 10px 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .pricing-plan h2 {
-    color: #0056b3; /* Light blue heading */
+  to {
+    opacity: 1;
   }
-  
-  .pricing-plan p {
-    color: #333;
-    font-weight: bold;
-  }
-  
-  .pricing-plan ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .pricing-plan ul li {
-    margin-bottom: 5px;
-  }
+}

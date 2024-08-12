@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Token from "../helpers/tokenGenerator.js";
 import User from "../models/userModel.js";
 
@@ -19,7 +20,7 @@ class UserController {
     static async getUser(req, res) {
       const userId = req.params.id;
       try {
-        const user = await User.findOne({_id:userId}).select('-password');
+        const user = await User.findOne({_id: new mongoose.Types.ObjectId(userId.trim())}).select('-password');
         if (user) {
           res.sendData(200, {
             user: user

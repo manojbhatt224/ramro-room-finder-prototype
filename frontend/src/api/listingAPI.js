@@ -1,8 +1,8 @@
 import { axiosInstance } from "../helpers/axiosInstance";
 
-export const getAllListingsAPI = async () => {
+export const getAllListingsAPI = async (page, limit) => {
     try {
-      const response = await axiosInstance.get('/api/listings');
+      const response = await axiosInstance.get(`/api/listings/?page=${page}&limit=${limit}`);
       return response.data; 
     } catch (error) {
       throw error;

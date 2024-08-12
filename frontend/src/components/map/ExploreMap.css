@@ -1,0 +1,9 @@
+.marker-label{
+    background-color: rgb(101, 177, 101); 
+    padding: 20px; 
+
+    border-radius: 50%; 
+    border: 1px solid black;
+    color:white;
+    white-space: nowrap; 
+}

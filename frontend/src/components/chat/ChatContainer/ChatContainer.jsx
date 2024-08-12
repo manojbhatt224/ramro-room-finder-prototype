@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
+import {Routes, Route } from 'react-router-dom'
 import ChatListBar from '../ChatListBar/ChatListBar';
-import ChatBox from '../ChatBox/ChatBox';
+const ChatBox= lazy(()=>import("../ChatBox/ChatBox"));
 import './ChatContainer.css';
+import DLoader from '../../loaderDashboard/dLoader';
 
 function ChatContainer() {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const handleUserClick = async (user) => {
-    console.log("I am clicked.")
-    await setSelectedUser(user);
-    console.log(selectedUser);
 
-  };
   return (
     <div className="chat-container">
-     <ChatListBar onUserClick={handleUserClick} />
-     <ChatBox selectedUser={selectedUser}/>
+     <ChatListBar/>
+     <Routes>
+  <Route path="/:userId" element={<Suspense fallback={<DLoader/>}><ChatBox/></Suspense>}/>
+  </Routes>
+     
     </div>
   );
 }
