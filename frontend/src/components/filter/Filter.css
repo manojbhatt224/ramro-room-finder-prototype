@@ -1,30 +1,41 @@
 .filter{
     display:flex;
     flex-direction:column;
-    padding:5px;
-    gap:5px;
+    padding:0px;
+    gap:1px;
+    .location-list{
+        padding-left:10px;
+        position: absolute; /* Positions the list relative to the closest positioned ancestor */
+               left: 2;
+        width: fit-content; /* Match the width of the input */
+        max-height: 150px; /* Limit the height of the list */
+        overflow-y: scroll; /* Adds scrollbar if the list is too long */
+        background-color: white; /* Background color to ensure visibility */
+        border: 1px solid #ddd; /* Border to define the list edges */
+        border-radius: 4px; /* Rounded corners for a nicer look */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow to give a floating effect */
+        z-index: 1000; /* Ensure it appears above other elements */
+    }
     h1{
         font-weight:300;
         font-size:24px;
     }
     label{
-        margin-bottom:5px;
+        margin-bottom:1px;
     }
-    .top{
 
-        input{
-            padding:10px;
-            border: 1px solid #e0e0e0;
-            border-radius:5px;
-            width:100%;
-            outline:none;
-        }
-    }
     .bottom{
         display:flex;
         align-items: center;
         justify-content:space-evenly;
         gap:5px;
+        input{
+            padding:5px;
+            border: 1px solid #e0e0e0;
+            border-radius:5px;
+            width:100%;
+            outline:none;
+        }
     button{
        width:60px;
        height:40px;
@@ -50,7 +61,7 @@
             font-size:15px;
         }
         input, select{
-            width:100px;
+            width:150px;
             padding:10px;
             border: 1px solid #e0e0e0;
             border-radius:5px;

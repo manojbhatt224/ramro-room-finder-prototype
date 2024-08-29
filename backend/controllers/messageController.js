@@ -17,9 +17,11 @@ export const addMessage = async (req, res) => {
 
 export const getMessages = async (req, res) => {
   const { chatId } = req.params;
+  console.log("Messages supplying to", chatId);
   try {
     const results = await Message.find({ chatId });
-    res.status(200, {data:results})
+    console.log(results);
+    res.sendData(200, {chatId: chatId, messages: results})
   } catch (error) {
     res.status(500, {error:error})
   }

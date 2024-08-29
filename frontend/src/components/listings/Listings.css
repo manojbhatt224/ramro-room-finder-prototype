@@ -8,7 +8,7 @@
 }
 .listings{
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); /* Responsive grid */
+    grid-template-columns: repeat(auto-fit, minmax(510px, 1fr)); /* Responsive grid */
     gap: 16px; /* Space between cards */
     padding: 16px; /* Space inside container */
   

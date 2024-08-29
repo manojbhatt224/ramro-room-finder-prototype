@@ -55,12 +55,11 @@ useEffect(() => {
       await setMessages((prevMessages) => [...prevMessages, message]);
       
       console.log('Message received:', message);
-      console.log('Messages', messages)
+
     }
 
     
     socket?.on("message", handleMessage);
-    console.log(messages)
     // Clean up the effect
     return () => {
       socket?.off("message", handleMessage);

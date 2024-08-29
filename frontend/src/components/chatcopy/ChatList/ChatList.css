@@ -1,0 +1,140 @@
+.chatlistbar-container{
+  max-width:350px;
+  display:flex;
+  height:630px;
+  flex-direction:column;
+  background-color:#ebd9d9;
+}
+
+.userInfo{
+  padding:15px;
+  display:flex;
+  align-items:center;
+
+  justify-content:space-between;
+}
+.userInfoUser{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  margin-right: 10px;
+  h3{
+      color:black;
+  }
+  img{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      object-fit:cover;
+  }
+}
+.userInfoIcons{
+  display:flex;
+  background-color:rgb(65, 142, 209);
+  padding:8px;
+  border-radius:50%;
+  img{
+      width:20px;
+      height:20px;
+      cursor:pointer;
+  }
+}
+.chatlist-container {
+  overflow: auto;
+}
+
+/* For webkit browsers */
+.chatlist-container::-webkit-scrollbar {
+  width: 8px; /* Default scrollbar width */
+}
+
+.chatlist-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2); /* Slightly visible */
+  border-radius: 4px;
+}
+
+.chatlist-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4); /* Darker when hovered */
+}
+
+/* For Firefox */
+.chatlist-container {
+  scrollbar-width: thin; /* Use thin scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Slightly visible */
+}
+
+.chatlist-container{
+  padding:10px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .chatListSearch{
+      display:flex;
+      align-items:center;
+      gap:20;
+      .add{
+          width:43px;
+          height:43px;
+          background-color:rgb(138, 145, 148);
+          padding:12px;
+          border-radius:10px;
+          margin-left:2px;
+      }
+      .chatListSearchBar{
+          flex:1;
+          display:flex;
+          background-color:rgb(110, 115, 117);
+          align-items:center;
+          gap:20px;
+          border-radius: 10px;
+          padding:10px;
+
+          input{
+              background-color:transparent;
+              border:none;
+              outline:none;
+              color:rgb(231, 227, 227);
+              flex:1;
+          }
+          img{
+              width:20px;
+              height:20px;
+          }
+      }
+  }
+.item{
+      display:flex;
+      align-items:center;
+      width:100%;
+      gap:20px;
+      margin-bottom:2px;
+      border-radius:5px;
+      padding:2px;
+      background-color:#cec0c0;
+      cursor:pointer;
+      
+  img{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      object-fit:cover;
+  }
+  .texts{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      color:rgb(31, 28, 28);
+      span{
+          font-weight:500;
+      }
+      p{
+          color:rgb(49, 41, 41);
+          font-size:14px;
+          font-weight:300;
+      }
+  }
+  }
+
+}

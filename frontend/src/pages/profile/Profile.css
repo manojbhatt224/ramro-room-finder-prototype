@@ -1,0 +1,24 @@
+.my-profile-wrapper{
+    padding:0px;
+.my-profile-options{
+    .profile-options{
+        display: flex;
+        gap: 2px;
+        .option{
+            background-color: rgb(222, 227, 235);
+            padding: 5px;
+            font-size:14px;
+            cursor:pointer;
+            
+        }
+        .option:hover{
+            background-color: rgb(148, 148, 173);
+            color: white;
+        }
+    }
+    .my-profile-content{
+        height:100%;
+    }
+}
+}
+

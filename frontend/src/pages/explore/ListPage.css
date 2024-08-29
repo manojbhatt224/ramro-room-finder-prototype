@@ -1,52 +1,64 @@
-.list-page {
-  display: flex;
-  height: 100vh;
-  .filter-list-container {
-    display:flex;
-    flex:4;
-    flex-direction: column;
-    .list-container {
-      padding: 10px;
-      height: 400px;
-      overflow: scroll;
-      .wrapper {
-        padding-right: 50px;
+.list-page-wrapper {
+  padding: 0px;
+  /* background-color:red; */
+  .filter-wrapper {
+    /* background-color:blue; */
+    padding: 0px;
+    margin: 0px;
+    margin-bottom: 5px;
+  }
+  .list-page {
+    display: flex;
+    height: 100%;
+    .filter-list-container {
+      display: flex;
+      flex: 4;
+      flex-direction: column;
+      .list-container {
+        padding: 10px;
+        height: 700px;
+        overflow: scroll;
+        .wrapper {
+          padding-right: 50px;
+        }
       }
     }
-  }
-  .map-container {
-    flex:3;
-    height: 100vh;
-    width: 100%;
-    background-color: #5a5858;
+    .map-container {
+      flex: 3;
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #e0d2d2;
+    }
   }
 }
-@media (max-width:700px){
-    .list-page {
-        display: flex;
-        width:min-content;
-        height: fit-content;
-        flex-direction: column-reverse;
-        .filter-list-container {
-          display:flex;
-          width:min-content;
-          flex:none;
-          height:800px;;
-          flex-direction: column;
-          .list-container {
-            padding: 10px;
-            height: 500px;
-            overflow: scroll;
-            .wrapper {
-              /* padding-right: 50px; */
-            }
-          }
-        }
-        .map-container {
-          flex:none;
-          height: 70vh;
-          width:100%;
-          background-color: #5a5858;
-        }
+@media (max-width: 700px) {
+  .list-page-wrapper {
+    .list-page{
+    display: flex;
+    width: min-content;
+    height: fit-content;
+    flex-direction: column-reverse;
+    .filter-list-container {
+      display: flex;
+      width: min-content;
+      flex: none;
+      height: 800px;
+      flex-direction: column;
+      .list-container {
+        padding: 10px;
+        height: 500px;
+        overflow: scroll;
       }
+    }
+    .map-container {
+      flex: none;
+      height: 50vh;
+      width: 100%;
+      background-color: #5a5858;
+    }
+  }
+}
 }

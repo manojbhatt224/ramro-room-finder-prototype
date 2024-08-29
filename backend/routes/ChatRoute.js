@@ -3,7 +3,7 @@ import { createChat, findChat, userChats } from '../controllers/chatController.j
 const router = express.Router()
 
 router.post('/', createChat);
-router.get('/:userId', userChats);
+router.get('/', userChats);
 router.get('/find/:firstId/:secondId', findChat);
 
 export {router as chatRoutes}

@@ -1,9 +1,7 @@
 .marker-label{
-    background-color: rgb(101, 177, 101); 
-    padding: 20px; 
 
-    border-radius: 50%; 
-    border: 1px solid black;
-    color:white;
+    font-family: 'Impact', sans-serif;
+font-weight: 1000; 
+
     white-space: nowrap; 
 }

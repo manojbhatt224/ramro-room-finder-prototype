@@ -1,4 +1,6 @@
 import express from 'express';
+import { locationRoutes } from './locationRoute.js';
+
 import { authRoutes } from './authRoute.js';
 import { userRoutes } from './userRoute.js';
 import { listingRoutes } from './listingRoute.js';
@@ -12,6 +14,7 @@ import checkUserAuth from '../middlewares/auth-middleware.js';
 const router = express.Router();
 //public routes
 router.use("/auth", authRoutes);
+router.use("/location", locationRoutes);
 
 //protected routes
 router.use("/users", checkUserAuth, userRoutes);

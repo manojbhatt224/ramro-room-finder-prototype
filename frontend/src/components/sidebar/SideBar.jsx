@@ -48,14 +48,11 @@ const Sidebar = () => {
             <FaHouseUser className="fs-2" />
             {/* <span className="ms-2 d-none d-sm-inline">My Listings</span> */}
           </Link>
-          <a href="#" className="nav-link text-primary fs-5 my-1" aria-current="page">
-            <TbBrandBooking className="fs-2" />
-            {/* <span className="ms-2 d-none d-sm-inline">Bookings</span> */}
-          </a>
-          <a href="#" className="nav-link text-primary fs-5 my-1" aria-current="page">
-            <CiSettings className="fs-2" />
-            {/* <span className="ms-2 d-none d-sm-inline">Settings</span> */}
-          </a>
+          <Link to="/dashboard/profile" className="nav-link text-primary fs-5 my-1" aria-current="page">
+          <CiSettings className="fs-2" />
+            {/* <span className="ms-2 d-none d-sm-inline">My Listings</span> */}
+          </Link>
+
         </div>
       </div>
     </div>

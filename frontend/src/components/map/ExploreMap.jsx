@@ -1,6 +1,5 @@
-import * as XLSX from 'xlsx'
 
-import React, { useEffect, useState, lazy} from 'react'
+import React, { useState, useMemo} from 'react'
 import { GoogleMap, Marker, InfoWindow} from '@react-google-maps/api';
 import './ExploreMap.css'
 
@@ -28,28 +27,53 @@ console.log(listings)
         lng: listings[0].longitude,
       } : { lat: 0, lng: 0 };
     
+      const memoizedMarkers = useMemo(() => (
+        listings?.map((listing) => (
+          <Marker
+            icon={`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAD8GO2jAAAAC0lEQVR42mP8/wcAAwAB/2WCRF4AAAAASUVORK5CYII=`}
+            key={listing?._id}
+            position={{ lat: listing.latitude, lng: listing.longitude }}
+            label={{
+              text: `${listing?.price}`,
+              color: `green`,
+              fontSize: `20px`,
+              className: "marker-label",
+            }}
+            onClick={() => setSelected(listing)}
+          />
+        ))
+      ), [listings]);
     
      
   return (
     isLoaded ? (
       <GoogleMap
       mapContainerStyle={containerStyle}
-      zoom={13}
+      zoom={18}
       center={center}
     >
-      {listings?.map((listing) => (
+      {memoizedMarkers}
+      {/* {listings?.map((listing) => (
         <Marker
+        icon={`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAD8GO2jAAAAC0lEQVR42mP8/wcAAwAB/2WCRF4AAAAASUVORK5CYII=`}
           key={listing?._id}
           position={{ lat: listing.latitude, lng: listing.longitude }}
           // icon={createCustomMarkerIcon(listing.price)}
-          label={{text:`${listing.price}`,color:'#fff', fontSize:'12px',className:'marker-label'}}
+          label={{
+            text: `${listing?.price}`,
+            color: `green`,
+            fontSize:`20px`,
+            className: "marker-label",
+          }}
+
           onClick={() => setSelected(listing)}
           color="green"
         />
-      ))}
+      ))} */}
 
       {selected && (
         <InfoWindow
+  
           position={{ lat: selected.latitude, lng: selected.longitude }}
           onCloseClick={() => setSelected(null)}
         >

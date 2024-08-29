@@ -287,6 +287,96 @@ export async function getListingsWithOwner(page, limit) {
     }
 }
 
+
+export async function getFilteredListingsWithOwner(filter, page, limit) {
+    console.log(page, limit)
+
+    const skip = (page - 1) * limit;
+    try {
+        const data = await Listing.aggregate([
+            {
+                $match:   filter
+            },
+            {    
+                $lookup: {
+                    from: 'media',
+                    localField: '_id',
+                    foreignField: 'listingId',
+                    as: 'medias'
+                }
+            },
+            {
+                $addFields: {
+                    medias: {
+                        $map: {
+                            input: '$medias',
+                            as: 'media',
+                            in: {
+                                path: '$$media.path',
+                                type: '$$media.type'
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userId',
+                    foreignField: '_id',
+                    as: 'ownerDetails'
+                }
+            },
+            { $unwind: { path: '$ownerDetails', preserveNullAndEmptyArrays: true } },
+            
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'reviews.userId',
+                    foreignField: '_id',
+                    as: 'reviewUsers'
+                }
+            },
+            {
+                $project: {
+                    _id:1,
+                    title: 1,
+                    description: 1,
+                    price: 1,
+                    type: 1,
+                    area: 1,
+                    parking: 1,
+                    bed: 1,
+                    rented:1,
+                    maxPeople: 1,
+                    kitchen: 1,
+                    location:1,
+                    latitude:1,
+                    longitude:1,
+                    hall: 1,
+                    bedrooms: 1,
+                    garden: 1,
+                    rooms: 1,
+                    medias: 1,
+                    ownerDetails: {
+                        _id:1,
+                        firstName: 1,
+                        lastName: 1,
+                        photourl: 1
+                    }
+                }
+            },
+            { $skip: skip },
+            { $limit: limit }
+        ]);
+        const totalDocuments = await Listing.countDocuments(filter);
+        return {listings: data, totalDocuments, currentPage: page, totalPages:Math.ceil(totalDocuments/limit)};
+    } catch (error) {
+        throw new Error(`Aggregation error: ${error.message}`);
+    }
+}
+
+
 export async function getUserListingsWithOwner(userId) {
     try {
         return Listing.aggregate([

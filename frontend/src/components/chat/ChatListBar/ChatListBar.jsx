@@ -27,7 +27,6 @@ function ChatListBar() {
       await dispatch(getAllUsers());
     }
     fetchUsers();
-    console.log(chatUsers);
   }, []);
 
   const chats = [
@@ -66,9 +65,7 @@ function ChatListBar() {
           <img src="/images/edit.png" alt="" />
         </div>
       </div>
-      {/* <UserInfo/> */}
 
-      {/* <UserInfo/> */}
       <div className="chatlist-container">
         <div className="chatListSearch">
           <div className="chatListSearchBar">

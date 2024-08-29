@@ -53,12 +53,7 @@ export async function setupSocket(io) {
   
         await message.save();
   
-        io.to(roomId).emit('message', {
-          chatId: chat._id,
-          senderId,
-          receiverId,
-          text,
-        });
+        io.to(roomId).emit('message', message);
       } catch (error) {
         console.error("Error handling message:", error);
         socket.emit('error', { message: "Error handling message" });

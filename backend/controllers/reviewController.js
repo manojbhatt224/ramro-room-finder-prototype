@@ -40,18 +40,9 @@ else{
   static async updateReview(req, res) {
     const userId = req.user._id.toString();
     const reviewId = req.params.id;
-    console.log(req.body);
-
     const { listingId, comment, rating } = req.body;
-    console.log(userId !== review?.userId.toString());
-console.log(listingId !== review?.listingId.toString());
-
     try {
       var review = await findReviewWithPermissionDetails(reviewId);
-      console.log("Requesting User", userId);
-      console.log("Review Id:", reviewId);
-      console.log("listingId",listingId );
-      console.log(review);
       if (!review?._id.toString()){
         res.sendData(400,{error:"No Such Review to Update!"})
       }

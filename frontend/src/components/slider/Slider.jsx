@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import './Slider.css'
 
 function collectPaths(objectsArray) {
-    const baseUrl = "http://192.168.1.74:5000/uploads/";
+    const baseUrl = `${import.meta.env.VITE_BACKEND_URL}/uploads/`;
     return objectsArray?.map(media => {
         const filename = media.path.split("\\").pop();
         return `${baseUrl}${filename}`;
@@ -11,7 +11,7 @@ function collectPaths(objectsArray) {
 
 const Slider = ({image}) => {
     const images = collectPaths(image);
-    console.log(images);
+    // console.log(images);
     const [imageIndex, setImageIndex]=useState(null);
     const changeSlide=(direction)=>{
         if (direction === "left") {

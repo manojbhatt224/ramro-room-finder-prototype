@@ -1,8 +1,10 @@
 import { axiosInstance } from "../helpers/axiosInstance";
 
-export const getAllListingsAPI = async (page, limit) => {
+export const getAllListingsAPI = async (filters, page, limit) => {
     try {
-      const response = await axiosInstance.get(`/api/listings/?page=${page}&limit=${limit}`);
+     const filterString = new URLSearchParams(filters).toString();
+      const urlString=filterString? `/api/listings/?page=${page}&limit=${limit}&${filterString}`:`/api/listings/?page=${page}&limit=${limit}`;
+      const response = await axiosInstance.get(urlString);
       return response.data; 
     } catch (error) {
       throw error;

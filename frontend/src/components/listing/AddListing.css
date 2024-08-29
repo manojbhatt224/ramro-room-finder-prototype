@@ -14,3 +14,21 @@ border:1px solid rgb(88, 84, 84);
     margin-top: 5px;
     margin-bottom:5px; 
 }
+@media (max-width: 768px) {
+    .add-listing {
+height:fit-content;
+        display:flex;
+      flex-direction: column;
+      padding: 0px;
+      .add-listing-form{
+        background-color:yellow;
+        flex:none;
+        /* padding:10px; */
+    }
+    .add-listing-map{
+        flex:none;
+        height:400px;
+    border:1px solid rgb(88, 84, 84);
+    }
+    }
+}

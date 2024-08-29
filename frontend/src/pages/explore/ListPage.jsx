@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "./ListPage.css";
 import Filter from "../../components/filter/Filter";
 import ListingCard from "../../components/listing/ListingCard";
@@ -19,7 +19,6 @@ import ExploreMap from "../../components/map/ExploreMap";
 const ListPage = () => {
   const listContainerRef = useRef(null);
   const dispatch = useDispatch();
-  const page = useSelector(selectPage);
   const hasMore = useSelector(selectFetchHasMore);
   const loading = useSelector(selectFetchLoading);
   const error = useSelector(selectFetchError);
@@ -28,14 +27,10 @@ const ListPage = () => {
   const loadMoreData = useCallback(() => {
     const loadingValue = loading;
     const hasMoreValue = hasMore;
-    console.log(
-      "loading more data, loading:",
-      loadingValue,
-      "hasMore:",
-      hasMoreValue
-    );
+   
     if (!loadingValue && hasMoreValue) {
       dispatch(getAllListings());
+   
     } else {
       return;
     }
@@ -87,10 +82,17 @@ const ListPage = () => {
       });
     }
   }, [error]);
+  const filterListing= (filter)=>{
+    dispatch(getAllListings(filter));
+  }
   return (
+    <>
+  <div className="list-page-wrapper">
+    <div className="filter-wrapper">
+    <Filter />
+    </div>
     <div className="list-page">
       <div className="filter-list-container">
-        <Filter />
         <div className="list-container" ref={listContainerRef}>
           {error ? <h1>{error}</h1> : <></>}
           {listings ? (
@@ -119,16 +121,19 @@ const ListPage = () => {
           )}
           {!hasMore && (
             <div className="text-center" style={{ width: "100%" }}>
-              No more listings!
+              {listings.length>0 ? "No more listings." : "No Listings at the moment!"}
             </div>
           )}
         </div>
       </div>
 
       <div className="map-container">
-        <ExploreMap listings={listings} />
+      {listings.length>0 ?   <ExploreMap listings={listings}/>: <h3>No listings available at the moment!</h3>}
       </div>
     </div>
+  </div>
+
+    </>
   );
 };
 

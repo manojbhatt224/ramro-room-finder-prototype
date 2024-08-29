@@ -1,13 +1,30 @@
 .listing-card{
     padding:20px;
     display:flex;
-    gap:5px;
+    gap:10px;
     border-top:1px solid rgb(170, 96, 96);
     .image-container{
         flex:2;
-        height:200px;
+        height:300px;
         display:flex;
         justify-content: center;
+        .myCarousel{
+            background-color:blue;
+        .carousel{
+            padding:0px;
+            .carousel-inner{
+                height:300px;
+                padding: 10px;
+           background-color:rgb(160, 152, 152);
+           .carousel-item{
+            img{
+                height:230px;
+                width:230px;
+            }
+           }
+            }
+        }
+        }
         img{
 
             height:200px;
@@ -139,9 +156,9 @@
                 display:flex;
                 gap:10px;
                 .icon{
-                    height:20px;
+                    height:30px;
                     border:1px solid #999;
-                    padding:10px 5px;
+                    padding:11px 11px;
                     border-radius: 5px;
                     cursor:pointer;
                     display:flex;

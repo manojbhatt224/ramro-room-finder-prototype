@@ -11,7 +11,6 @@ import {
   CloseButton,
 } from "react-bootstrap";
 import "./AddListing.css";
-import { addListingAPI } from "../../api/listingAPI";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectOperationError,
@@ -30,6 +29,7 @@ import {
 } from "@react-google-maps/api";
 import { useGoogleMaps } from "../../context/GoogleMapContext";
 import Swal from "sweetalert2";
+import TestMap from "../map/TestMap";
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -41,15 +41,13 @@ const center = {
   lng: 85.34189479999999,
 };
 
-const AddListing = ({ onSubmit, initialData }) => {
+const AddListing = ({initialData }) => {
   const dispatch = useDispatch();
   const error = useSelector(selectOperationError);
   const loading = useSelector(selectOperationLoading);
   const success = useSelector(selectOperationSuccess);
 
   const [searchBox, setSearchBox] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(center);
-
   const [formData, setFormData] = useState({
     type: "",
     title: "",
@@ -71,6 +69,15 @@ const AddListing = ({ onSubmit, initialData }) => {
   const [files, setFiles] = useState([]);
   const {isLoaded}=useGoogleMaps();
 
+  const setLocation=(location)=>{
+    setFormData((prevData) => ({
+      ...prevData,
+      latitude: location?.lat,
+      longitude: location?.lng,
+      location: location?.fullAddress,
+    }));
+
+  }
   const handlePlaceChanged = () => {
     const place = searchBox.getPlaces()[0];
     if (place) {
@@ -84,6 +91,8 @@ const AddListing = ({ onSubmit, initialData }) => {
       }));
     }
   };
+
+
 
   const handleMapClick = (event) => {
     const lat = event.latLng.lat();
@@ -119,7 +128,6 @@ const AddListing = ({ onSubmit, initialData }) => {
   }, [initialData]);
   useEffect(() => {
     if (error) {
-      console.log(error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -168,6 +176,7 @@ const AddListing = ({ onSubmit, initialData }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData?.location){
     const data = new FormData();
     for (const key in formData) {
       data.append(key, formData[key]);
@@ -177,10 +186,11 @@ const AddListing = ({ onSubmit, initialData }) => {
         data.append("files", files[i]);
       }
     }
-    console.log(formData);
     dispatch(addListing(data));
-    dispatch(getMyListings());
-  };
+  }
+else{
+  alert("Please set Location")
+}};
 
   return (
     <>
@@ -258,7 +268,9 @@ const AddListing = ({ onSubmit, initialData }) => {
                         onPlacesChanged={handlePlaceChanged}
                       >
                         <Form.Control
+                          disabled={true}
                           type="string"
+                          placeholder="Set Location from Map"
                           name="location"
                           value={formData.location}
                           onChange={handleChange}
@@ -271,6 +283,7 @@ const AddListing = ({ onSubmit, initialData }) => {
                       <Form.Control
                         type="string"
                         name="longitude"
+                        disabled={true}
                         value={formData.longitude}
                         onChange={handleChange}
                         required
@@ -280,6 +293,7 @@ const AddListing = ({ onSubmit, initialData }) => {
                       <Form.Label>Latitude</Form.Label>
                       <Form.Control
                         type="string"
+                        disabled={true}
                         name="latitude"
                         value={formData.latitude}
                         onChange={handleChange}
@@ -462,14 +476,7 @@ const AddListing = ({ onSubmit, initialData }) => {
             </Container>
           </div>
           <div className="add-listing-map">
-            <GoogleMap
-              mapContainerStyle={mapContainerStyle}
-              center={markerPosition}
-              zoom={15}
-              onClick={handleMapClick}
-            >
-              <Marker position={markerPosition} />
-            </GoogleMap>
+    <TestMap onAddClick={setLocation}/>
           </div>
         </div>
     ) : (<></>)}    

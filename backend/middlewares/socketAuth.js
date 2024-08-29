@@ -9,8 +9,6 @@ const socketAuth = (socket, next) => {
       }
     jwt.verify(token, process.env.JWT_ACCESS_SECRET, (err, decoded) => {
         if (err) {
-            // res.sendData(401, "Unauthorized User",{'error':err})
-            console.log(err)
             return next(new Error('Authentication error: Invalid token'));
         }
         socket.userId = decoded.id; 

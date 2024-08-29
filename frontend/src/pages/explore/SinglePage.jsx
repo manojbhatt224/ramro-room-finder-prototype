@@ -135,7 +135,10 @@ const SinglePage = () => {
                 <h1>{listing?.title}</h1>
                 <div className="sp-address">
                   <img src="/icons/pin.png" alt="" />
-                  <span>{listing?.location}</span>
+                  <span>{listing?.location.split(',')
+        .slice(0, -2)
+        .join(',')
+        .trim()}</span>
                 </div>
                 <div className="sp-price">Rs {listing?.price}</div>
               </div>
@@ -148,7 +151,7 @@ const SinglePage = () => {
                   />
                 ) : (
                   <div style={{ textAlign: "center" }} className="img-error">
-                    {listing?.ownerDetails?.firstName?.charAt(0).toUpperCase()}
+                    {listing?.ownerDetails?.firstName?.trim().charAt(0).toUpperCase()}
                   </div>
                 )}
                 <span>
@@ -319,7 +322,7 @@ const SinglePage = () => {
           </div>
           <p className="sp-title">Location</p>
           <div className="sp-mapcontainer">
-            <Map listing={listing} />
+            {/* <Map listing={listing} /> */}
           </div>
           <div className="sp-buttons">
             <button>

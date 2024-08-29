@@ -3,14 +3,38 @@ import { Listing, Room, House, Flat } from "../models/listingModel.js";
 import mongoose from "mongoose";
 import { Media } from "../models/mediaModel.js";
 import fs from 'fs'
-import {getListingDetails, getListingsWithOwner, getUserListingsWithOwner} from '../aggregations/listing.js'
+import {getListingDetails, getListingsWithOwner, getFilteredListingsWithOwner, getUserListingsWithOwner} from '../aggregations/listing.js'
 
 class ListingController {
   static async getAllListings(req, res) {
+    const {location, minPrice, maxPrice, type} = req.query;
+    let filter = {};
+    if (location) filter.location = new RegExp(location, 'i');
+    if (type) {
+      filter.type = type;
+    }
+  
+    if (minPrice) {
+      filter.price = { ...filter.price, $gte: Number(minPrice) };
+    }
+  
+    if (maxPrice) {
+      filter.price = { ...filter.price, $lte: Number(maxValue) };
+    }
+  
+
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 3;
     try {
-      const finalData = await getListingsWithOwner(page,limit);
+      let finalData;
+      if (Object.keys(filter).length > 0){
+        finalData = await getFilteredListingsWithOwner(filter, page,limit);
+    }
+    else{
+      finalData = await getListingsWithOwner(page,limit);
+
+    }
       
       if (finalData?.listings?.length != 0) {
         res.sendData(200, { ...finalData });
@@ -21,7 +45,7 @@ class ListingController {
       res.sendData(401, { error: `${error}` });
     }
   }
-  static async getMyListings(req, res) {
+    static async getMyListings(req, res) {
     try {
       const listings = await getUserListingsWithOwner(req.user._id)
       if (listings.length != 0) {

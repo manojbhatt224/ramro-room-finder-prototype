@@ -8,6 +8,7 @@ import { useSelector,useDispatch } from "react-redux";
 import {getMyListings, selectFetchError, selectListings, selectFetchLoading, setFetchError } from "../../slices/listingSlice";
 import { Oval } from "react-loader-spinner";
 import Swal from "sweetalert2";
+import ListingCard from "../listing/ListingCard";
 
 const Listings = () => {
   const dispatch=useDispatch();
@@ -65,7 +66,7 @@ useEffect(() => {
         <div className="listings">
           {error? <h1>{error}</h1>: <></>}
           {loading && <div style={{width:"100%", display:"flex", justifyContent:"center", alignItems:"center"}}><Oval visible={true} height="200" color="#000000" ariaLabel="oval-loading" /></div>} 
-          {listings && listings?.length>0 ? listings.map((listing, index)=>(<Listing key={index} {...listing} operation={true}/> )) :<h3>You have no listings.</h3>}
+          {listings && listings?.length>0 ? listings.map((listing, index)=>(<ListingCard key={index} {...listing} operation={true}/> )) :<h3>You have no listings.</h3>}
         </div>
       </div>
     </>

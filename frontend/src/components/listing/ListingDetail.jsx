@@ -1,5 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
+
 import { useSelector, useDispatch } from "react-redux";
+
 import { selectListing, getListing } from "../../slices/listingSlice";
 import {
   selectOperationError,
@@ -79,7 +81,6 @@ const ListingDetail = () => {
   };
   const fetchListing = async () => {
     await dispatch(getListing(listingId));
-    console.log(listing);
   };
   useEffect(() => {
     if (addReviewError) {

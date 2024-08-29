@@ -17,11 +17,13 @@ export const getMyListings = createAsyncThunk(
 
 export const getAllListings = createAsyncThunk(
   'listing/getAllListings',
-  async (_, { getState,rejectWithValue }) => {
+  async (_,{ getState,rejectWithValue }) => {
     const state=getState();
     const page=state.listing.page
+    const filters=state.listing.filters
     try {
-      const response = await getAllListingsAPI(page, 3);
+      const response = await getAllListingsAPI(filters,page, 3);
+      console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -66,7 +68,8 @@ const initialState = {
   fetchLoading:false,
   operationError: null,
   operationLoading: false,
-  operationSuccess: null 
+  operationSuccess: null,
+  filters:{} 
 };
 
 export const listingSlice = createSlice({
@@ -84,6 +87,16 @@ export const listingSlice = createSlice({
     },
     setOperationError: (state, action) => {
       state.operationError = action.payload;
+    },
+    setFilters: (state, action) => {
+      state.filters = { ...state.filters, ...action.payload };
+      state.page = 1; // Reset to page 1 when filters change
+      state.listings = []; // Clear current listings to fetch new filtered data
+    },
+    clearFilters: (state) => {
+      state.filters = {};
+      state.page = 1; // Reset to page 1 when filters are cleared
+      state.listings = []; // Clear current listings to fetch unfiltered data
     },
   },
   extraReducers:(builder)=>{
@@ -127,7 +140,7 @@ export const listingSlice = createSlice({
       })
       .addCase(getAllListings.rejected, (state, action) => {
         state.fetchLoading = false;
-        state.fetchError = action.payload.data.error;
+        state.fetchError = action.payload?.data?.error;
       })
       .addCase(addListing.pending, (state) => {
         state.operationLoading = true;
@@ -146,8 +159,7 @@ export const listingSlice = createSlice({
   }
 });
 
-export const { setFetchError, setOperationError, resetListings} = listingSlice.actions;
-
+export const { setFetchError, setOperationError, resetListings, setFilters, clearFilters} = listingSlice.actions;
 export const selectListings=(state)=>state.listing.listings
 export const selectPage=(state)=>state.listing.page
 export const selectFetchHasMore=(state)=>state.listing.fetchHasMore

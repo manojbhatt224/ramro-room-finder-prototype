@@ -1,6 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {useDispatch, useSelector} from 'react-redux';
+import {selectUser} from '../../slices/authSlice'
+import { createChat } from "../../slices/chatSlice";
+import { Link, useNavigate } from "react-router-dom";
+import { CiEdit } from "react-icons/ci";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import "./ListingCard.css";
+import { FaHeart } from "react-icons/fa";
+import { BiDetail } from "react-icons/bi";
+import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 
 const ListingCard = ({
   _id,
@@ -24,10 +32,78 @@ const ListingCard = ({
   operation,
   ownerDetails,
 }) => {
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+  const myself = useSelector(selectUser);
+const onChatClick=async(userId)=>{
+dispatch(createChat(userId));
+navigate(`/dashboard/chats`);
+}
+
   return (
     <div className="listing-card">
       <div className="image-container">
-        <Link to="/dashboard/explore">
+      <div className="myCarousel">
+        <div id={`carousel-${_id}`} className="carousel slide">
+          <div className="carousel-indicators">
+            {medias?.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                data-bs-target={`#carousel-${_id}`}
+                data-bs-slide-to={index}
+                className={index === 0 ? "active" : ""}
+                aria-current={index === 0 ? "true" : "false"}
+                aria-label={`Slide ${index + 1}`}
+              ></button>
+            ))}
+          </div>
+          <div className="carousel-inner">
+            {medias?.map((media, index) => (
+              <div
+                key={index}  
+                className={`carousel-item ${index === 0 ? "active" : ""}`}
+              >
+                <div className="img-wrap">
+                  <img
+                    src={`${
+                      import.meta.env.VITE_BACKEND_URL
+                    }/uploads/${media.path.split("\\").pop()}`}
+                    className="d-block cimg"
+                    alt={`Media ${index + 1}`}
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            className="carousel-control-prev"
+            type="button"
+            data-bs-target={`#carousel-${_id}`}
+            data-bs-slide="prev"
+          >
+            <span
+              className="carousel-control-prev-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            className="carousel-control-next"
+            type="button"
+            data-bs-target={`#carousel-${_id}`}
+            data-bs-slide="next"
+          >
+            <span
+              className="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="visually-hidden">Next</span>
+          </button>
+        </div>
+      </div>
+        {/* <Link to="/dashboard/explore">
           <img
             src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${medias[0]?.path
               .split("\\")
@@ -36,7 +112,7 @@ const ListingCard = ({
             alt=""
             loading="lazy"
           />
-        </Link>
+        </Link> */}
       </div>
       <div className="text-container">
         <div className="top">
@@ -46,7 +122,10 @@ const ListingCard = ({
         </h2>
         <p className="address">
           <img src="/icons/pin.png" alt="" />
-          <span>{location}</span>
+          <span>{location?.split(',')
+        .slice(0, -2)
+        .join(',')
+        .trim()}</span>
         </p>
           </div>
           <div className="top-two">
@@ -121,28 +200,31 @@ const ListingCard = ({
           <div className="icons">
             {operation && (
               <>
-                {" "}
                 <div className="icon">
-                  <img src="/icons/edit.png" alt="" />
+                <CiEdit className="operation-icon text-primary" />
                 </div>
                 <div className="icon">
-                  <img src="/icons/delete.png" alt="" />
+              <RiDeleteBin6Line className="operation-icon text-danger"/>
                 </div>
               </>
             )}
             <div className="icon">
-              <img src="/icons/save.png" alt="" />
+            <FaHeart
+            style={{ color: "darkred"}}
+          />
+              {/* <img src="/icons/save.png" alt="" /> */}
             </div>
-            <div className="icon">
-              <Link to={`/dashboard/chats/${ownerDetails?._id}`}>
-                <img src="/icons/chat.png" alt="" />
-              </Link>
-            </div>
+ 
             <div className="icon">
               <Link to={`/dashboard/detail/${_id}`}>
-                <img src="/icons/detail.png" alt="" />
+              <BiDetail className="text-success " />
+                {/* <img src="/icons/detail.png" alt="" /> */}
               </Link>
-            </div>
+            </div>         
+            {ownerDetails?._id === myself?._id ?<></>: <div className="icon" onClick={()=>{onChatClick(ownerDetails?._id)}}>
+              <IoChatbubbleEllipsesOutline />
+  
+            </div>}
           </div>
         </div>
       </div>

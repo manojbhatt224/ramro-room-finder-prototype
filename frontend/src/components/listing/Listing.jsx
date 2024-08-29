@@ -28,6 +28,7 @@ const Listing = ({
   ownerDetails
 }) => {
   return (
+    <>
     <div className="card">
       <div className="myCarousel">
         <div id={`carousel-${_id}`} className="carousel slide">
@@ -150,6 +151,7 @@ const Listing = ({
         </div>
       </div>
     </div>
+    </>
   );
 };
 

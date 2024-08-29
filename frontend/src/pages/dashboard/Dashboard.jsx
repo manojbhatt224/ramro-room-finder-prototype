@@ -9,11 +9,11 @@ import Favourites from "../../components/favourites/Favourites";
 const Listings = lazy(() => import('../../components/listings/Listings'));
 // import Listings from "../../components/listings/Listings";
 const Explore =lazy(()=>import("../explore/Explore"));
-import ChatContainer from "../../components/chat/ChatContainer/ChatContainer";
+import ChatContainer from "../../components/chatcopy/ChatContainer/ChatContainer";
 import DLoader from "../../components/loaderDashboard/dLoader";
 import SinglePage from "../explore/SinglePage";
-const ListingDetail = lazy(()=>import("../../components/listing/ListingDetail"));
 import { SocketProvider } from "../../context/SocketContext";
+import Profile from "../profile/Profile";
 
 const Dashboard = () => {
   return (
@@ -32,6 +32,7 @@ const Dashboard = () => {
       </Suspense>}/>
   <Route path="/detail/:listingId" element={<Suspense fallback={<DLoader/>} ><SinglePage/></Suspense>}/>
   <Route path="/explore/*" element={<Suspense fallback={<DLoader/>}><Explore/></Suspense>}/>
+  <Route path="/profile" element={<Suspense fallback={<DLoader/>}><Profile/></Suspense>}/>
   </Routes>
   </div>
   </div>

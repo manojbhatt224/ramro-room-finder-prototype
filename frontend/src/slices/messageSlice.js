@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
 import { fetchMessagesAPI } from '../api/messageAPI';
 
-export const fetchChats = createAsyncThunk(
+export const fetchMessages = createAsyncThunk(
     'message/fetchMessages',
     async (chatId, { rejectWithValue }) => {
       try {
@@ -20,19 +19,15 @@ export const fetchChats = createAsyncThunk(
 const messageSlice = createSlice({
   name: 'message',
   initialState: {
-    messages: {},
+    messages: [],
     loading: false,
     error: null,
   },
-//   reducers: {
-//     addMessage: (state, action) => {
-//       const { chatId, message } = action.payload;
-//       if (!state.messages[chatId]) {
-//         state.messages[chatId] = [];
-//       }
-//       state.messages[chatId].push(message);
-//     },
-//   },
+  reducers: {
+    addMessage: (state, action) => {
+      state.messages.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchMessages.pending, (state) => {
@@ -40,16 +35,24 @@ const messageSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchMessages.fulfilled, (state, action) => {
+        console.log("Messages payload:", action.payload)
         const { chatId, messages } = action.payload;
-        state.messages[chatId] = messages;
+        state.messages= messages;
         state.loading = false;
       })
       .addCase(fetchMessages.rejected, (state, action) => {
+        console.log("Messages error:", action.error)
         state.loading = false;
         state.error = action.error.message;
       })
   },
 });
 
-// export const { addMessage } = messageSlice.actions;
+
 export default messageSlice.reducer;
+
+
+export const { addMessage} = messageSlice.actions;
+
+export const selectMessages=(state)=>state.message.messages
+export const selectLoading=(state)=>state.message.loading
