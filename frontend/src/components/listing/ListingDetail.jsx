@@ -9,7 +9,10 @@ import {
   addReview, updateReview,
   setOperationError,
 } from "../../slices/reviewSlice";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { useGoogleMaps } from "../../context/GoogleMapContext";
+import { deleteListingAPI } from "../../api/listingAPI";
 
 import "./ListingDetail.css";
 import { FaStar } from "react-icons/fa";
@@ -19,6 +22,7 @@ import Swal from "sweetalert2";
 
 const ListingDetail = () => {
   const { listingId } = useParams();
+  const navigate = useNavigate();
   const [updateState, setUpdateState]=useState(false);
   const [reviewId, setReviewId]=useState(null);
   const addReviewError = useSelector(selectOperationError);
@@ -28,6 +32,30 @@ const ListingDetail = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [comment, setComment] = useState("");
+  const { isLoaded } = useGoogleMaps();
+
+  const handleDeleteListing = async () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await deleteListingAPI(listingId);
+          Swal.fire("Deleted!", "Your listing has been deleted.", "success").then(() => {
+            navigate("/dashboard/listings");
+          });
+        } catch (error) {
+          Swal.fire("Error!", "Failed to delete listing.", "error");
+        }
+      }
+    });
+  };
 
   const resetStates=()=>{
     setUpdateState(false);
@@ -99,8 +127,20 @@ const ListingDetail = () => {
   }, [addReviewError]);
 
   useEffect(() => {
-    fetchListing();
-  }, []);
+    if (listingId) {
+      fetchListing();
+    }
+  }, [listingId]);
+  const resolveMediaUrl = (mediaPath) => {
+    if (!mediaPath) return "";
+    const normalized = mediaPath.replace(/\\/g, "/");
+
+    if (normalized.startsWith("http")) return normalized;
+    if (normalized.startsWith("/uploads/")) return `${import.meta.env.VITE_BACKEND_URL}${normalized}`;
+    if (normalized.startsWith("uploads/")) return `${import.meta.env.VITE_BACKEND_URL}/${normalized}`;
+
+    return `${import.meta.env.VITE_BACKEND_URL}/uploads/${normalized.split("/").pop()}`;
+  };
   return (
     <div className="listingdetail-wrapper">
       <h1>
@@ -147,13 +187,11 @@ const ListingDetail = () => {
         <div className="carousel-inner">
           {listing?.medias?.map((media, index) => (
             <div
-              key={index}
+              key={`${listing?._id}-${index}`}
               className={`carousel-item ${index === 0 ? "active" : ""}`}
             >
               <img
-                src={`${import.meta.env.VITE_BACKEND_URL}/uploads/${media.path
-                  .split("\\")
-                  .pop()}`}
+                src={resolveMediaUrl(media?.path)}
                 className="d-block w-100"
                 alt={`Media ${index + 1}`}
                 loading="lazy"
@@ -225,6 +263,45 @@ const ListingDetail = () => {
         </div>
       </div>
 
+      {isLoaded ? (
+        listing?.latitude && listing?.longitude ? (
+          <div className="ld-map-container">
+            <h3>Location on Map</h3>
+            <div className="ld-map-wrapper">
+              <GoogleMap
+                mapContainerStyle={{ width: "100%", height: "100%", borderRadius: "8px" }}
+                zoom={15}
+                center={{ lat: parseFloat(listing.latitude), lng: parseFloat(listing.longitude) }}
+                options={{
+                  disableDefaultUI: false,
+                  zoomControl: true,
+                }}
+              >
+                <Marker 
+                  position={{ lat: parseFloat(listing.latitude), lng: parseFloat(listing.longitude) }}
+                  title={listing.title}
+                />
+              </GoogleMap>
+            </div>
+          </div>
+        ) : (
+          <div className="ld-map-container">
+            <h3>Location</h3>
+            <p style={{color: "#666", textAlign: "center", padding: "20px"}}>Location coordinates not available for this listing.</p>
+          </div>
+        )
+      ) : (
+        <div className="ld-map-container">
+          <h3>Location</h3>
+          <p style={{color: "#666", textAlign: "center", padding: "20px"}}>Loading map...</p>
+        </div>
+      )}
+
+      <div className="ld-listing-actions">
+        <button className="ld-btn-delete" onClick={handleDeleteListing}>Delete Listing</button>
+        <button className="ld-btn-edit" onClick={() => navigate(`/dashboard/edit/${listingId}`)}>Edit Listing</button>
+      </div>
+
       <div className="ld-user-reviews">
         <h2>Reviews and ratings:</h2>
         <hr />
@@ -232,7 +309,7 @@ const ListingDetail = () => {
         {listing?.reviews && listing.reviews.length > 0 ? (
           [...listing.reviews]
             .reverse()
-            .map((review, index) => <Review key={index} {...review} ownerId={listing?.ownerDetails?._id} setReviewForUpdate={setUpdateData} />)
+            .map((review, index) => <Review key={listing._id + '-' + index} {...review} ownerId={listing?.ownerDetails?._id} setReviewForUpdate={setUpdateData} />)
         ) : (
           <h5>No Reviews Yet</h5>
         )}

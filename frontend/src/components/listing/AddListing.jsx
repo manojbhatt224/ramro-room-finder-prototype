@@ -18,8 +18,12 @@ import {
   getMyListings,
   selectOperationSuccess,
   addListing,
+  updateListing,
+  getListing,
+  selectListing,
 } from "../../slices/listingSlice";
 import { Oval } from "react-loader-spinner";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
   StandaloneSearchBox,
@@ -41,11 +45,14 @@ const center = {
   lng: 85.34189479999999,
 };
 
-const AddListing = ({initialData }) => {
+const AddListing = ({ initialData }) => {
   const dispatch = useDispatch();
+  const { listingId } = useParams();
+  const navigate = useNavigate();
   const error = useSelector(selectOperationError);
   const loading = useSelector(selectOperationLoading);
   const success = useSelector(selectOperationSuccess);
+  const existingListing = useSelector(selectListing);
 
   const [searchBox, setSearchBox] = useState(null);
   const [formData, setFormData] = useState({
@@ -67,58 +74,62 @@ const AddListing = ({initialData }) => {
     parking: false,
   });
   const [files, setFiles] = useState([]);
-  const {isLoaded}=useGoogleMaps();
+  const { isLoaded } = useGoogleMaps();
 
-  const setLocation=(location)=>{
-    setFormData((prevData) => ({
-      ...prevData,
-      latitude: location?.lat,
-      longitude: location?.lng,
-      location: location?.fullAddress,
-    }));
+  const handleMapClick = async (point) => {
+    const lat = point?.lat ?? point?.latLng?.lat?.();
+    const lng = point?.lng ?? point?.latLng?.lng?.();
 
-  }
-  const handlePlaceChanged = () => {
-    const place = searchBox.getPlaces()[0];
-    if (place) {
-      const lat = place.geometry.location.lat();
-      const lng = place.geometry.location.lng();
-      setFormData((prevData) => ({
-        ...prevData,
-        latitude: lat,
-        longitude: lng,
-        location: place.formatted_address,
-      }));
-    }
-  };
+    if (lat == null || lng == null) return;
 
-
-
-  const handleMapClick = (event) => {
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
     setFormData((prevData) => ({
       ...prevData,
       latitude: lat,
       longitude: lng,
     }));
-    setMarkerPosition({ lat, lng });
-    // You can use reverse geocoding to get the address from lat/lng
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
-        import.meta.env.VITE_GOOGLE_MAP_API_KEY
-      }`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.results[0]) {
-          setFormData((prevData) => ({
-            ...prevData,
-            location: data.results[0].formatted_address,
-          }));
-        }
-      })
-      .catch((error) => console.error(error));
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${
+          import.meta.env.VITE_GOOGLE_MAP_API_KEY
+        }`
+      );
+      const data = await response.json();
+      if (data.results?.[0]?.formatted_address) {
+        setFormData((prevData) => ({
+          ...prevData,
+          location: data.results[0].formatted_address,
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePlaceChanged = () => {
+    if (!searchBox) return;
+    const place = searchBox.getPlaces()?.[0];
+    if (place) {
+      const lat = place.geometry?.location?.lat?.();
+      const lng = place.geometry?.location?.lng?.();
+      if (lat != null && lng != null) {
+        setFormData((prevData) => ({
+          ...prevData,
+          latitude: lat,
+          longitude: lng,
+          location: place.formatted_address,
+        }));
+      }
+    }
+  };
+
+  const setLocation = (location) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      latitude: location?.lat ?? location?.latitude ?? prevData.latitude,
+      longitude: location?.lng ?? location?.longitude ?? prevData.longitude,
+      location: location?.fullAddress || location?.formatted_address || prevData.location,
+    }));
   };
 
   useEffect(() => {
@@ -126,6 +137,19 @@ const AddListing = ({initialData }) => {
       setFormData(initialData);
     }
   }, [initialData]);
+
+  useEffect(() => {
+    if (listingId) {
+      dispatch(getListing(listingId));
+    }
+  }, [listingId, dispatch]);
+
+  useEffect(() => {
+    if (existingListing && listingId) {
+      setFormData(existingListing);
+    }
+  }, [existingListing, listingId]);
+
   useEffect(() => {
     if (error) {
       Swal.fire({
@@ -176,27 +200,56 @@ const AddListing = ({initialData }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData?.location){
-    const data = new FormData();
-    for (const key in formData) {
-      data.append(key, formData[key]);
-    }
-    if (files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        data.append("files", files[i]);
+    if (formData?.location) {
+      if (listingId) {
+        // Update listing
+        const updateData = {
+          title: formData.title,
+          description: formData.description,
+          price: formData.price,
+          area: formData.area,
+          location: formData.location,
+          latitude: formData.latitude,
+          longitude: formData.longitude,
+          maxPeople: formData.maxPeople,
+          bedrooms: formData.bedrooms,
+          rooms: formData.rooms,
+          garden: formData.garden,
+          kitchen: formData.kitchen,
+          hall: formData.hall,
+          bed: formData.bed,
+          parking: formData.parking,
+        };
+        await dispatch(updateListing({ id: listingId, updatedData: updateData }));
+        Swal.fire({
+          title: "Success!",
+          text: "Listing updated successfully!",
+          icon: "success"
+        }).then(() => {
+          navigate("/dashboard/listings");
+        });
+      } else {
+        // Create new listing
+        const data = new FormData();
+        for (const key in formData) {
+          data.append(key, formData[key]);
+        }
+        if (files.length > 0) {
+          for (let i = 0; i < files.length; i++) {
+            data.append("files", files[i]);
+          }
+        }
+        dispatch(addListing(data));
       }
+    } else {
+      alert("Please set Location");
     }
-    dispatch(addListing(data));
-  }
-else{
-  alert("Please set Location")
-}};
+  };
 
   return (
     <>
-    {isLoaded ? (
-          <div className="add-listing">
-          
+      {isLoaded ? (
+        <div className="add-listing">
           <div className="add-listing-form">
             <Container>
               <Form
@@ -234,7 +287,7 @@ else{
                       />
                     </Form.Group>
                   </Col>
-      
+
                   <Col md={12} lg={4}>
                     <Form.Group className="add-listing-field">
                       <Form.Label>Price</Form.Label>
@@ -258,7 +311,7 @@ else{
                     required
                   />
                 </Form.Group>
-      
+
                 <Row className="add-listing-row">
                   <Col md={6} lg={4}>
                     <Form.Group className="add-listing-field">
@@ -268,12 +321,16 @@ else{
                         onPlacesChanged={handlePlaceChanged}
                       >
                         <Form.Control
-                          disabled={true}
-                          type="string"
-                          placeholder="Set Location from Map"
+                          type="text"
+                          placeholder="Search location or pick from map"
                           name="location"
                           value={formData.location}
-                          onChange={handleChange}
+                          onChange={(e) =>
+                            setFormData((prevData) => ({
+                              ...prevData,
+                              location: e.target.value,
+                            }))
+                          }
                           required
                         />
                       </StandaloneSearchBox>
@@ -341,7 +398,7 @@ else{
                       </Form.Group>
                     </Col>
                   )}
-      
+
                   {formData.type === "House" && (
                     <Col md={6} lg={4}>
                       <Form.Group className="add-listing-field">
@@ -469,24 +526,20 @@ else{
                       />
                     </div>
                   ) : (
-                    <div>{initialData ? "Update Listing" : "Create Listing"}</div>
+                    <div>{initialData || listingId ? "Update Listing" : "Create Listing"}</div>
                   )}
                 </Button>
               </Form>
             </Container>
           </div>
           <div className="add-listing-map">
-    <TestMap onAddClick={setLocation}/>
+            <TestMap onAddClick={setLocation} onMapClick={handleMapClick} />
           </div>
         </div>
-    ) : (<></>)}    
-
+      ) : (
+        <></>
+      )}
     </>
-
-
-
-
-
   );
 };
 

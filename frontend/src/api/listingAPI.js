@@ -50,14 +50,11 @@ export const getAllListingsAPI = async (filters, page, limit) => {
   };
   export const updateListingAPI = async (id, updatedData) => {
     try {
-      const response = await axiosInstance.delete('/api/listings/${id}',updateData
-        // , 
-        // {
-        // headers: {
-        //   'Authorization': `Bearer ${token}`,
-        //   'Content-Type': 'application/json',
-        // }}
-        )
+      const response = await axiosInstance.put(`/api/listings/${id}`, updatedData, {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       return response.data; 
     } catch (error) {
       throw error;

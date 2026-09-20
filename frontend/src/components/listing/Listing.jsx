@@ -27,6 +27,17 @@ const Listing = ({
   operation,
   ownerDetails
 }) => {
+  const resolveMediaUrl = (mediaPath) => {
+    if (!mediaPath) return "";
+    const normalized = mediaPath.replace(/\\/g, "/");
+
+    if (normalized.startsWith("http")) return normalized;
+    if (normalized.startsWith("/uploads/")) return `${import.meta.env.VITE_BACKEND_URL}${normalized}`;
+    if (normalized.startsWith("uploads/")) return `${import.meta.env.VITE_BACKEND_URL}/${normalized}`;
+
+    return `${import.meta.env.VITE_BACKEND_URL}/uploads/${normalized.split("/").pop()}`;
+  };
+
   return (
     <>
     <div className="card">
@@ -48,14 +59,12 @@ const Listing = ({
           <div className="carousel-inner">
             {medias.map((media, index) => (
               <div
-                key={index}
+                key={`${_id}-${index}`}
                 className={`carousel-item ${index === 0 ? "active" : ""}`}
               >
                 <div className="img-wrap">
                   <img
-                    src={`${
-                      import.meta.env.VITE_BACKEND_URL
-                    }/uploads/${media.path.split("\\").pop()}`}
+                    src={resolveMediaUrl(media?.path)}
                     className="d-block cimg"
                     alt={`Media ${index + 1}`}
                     loading="lazy"

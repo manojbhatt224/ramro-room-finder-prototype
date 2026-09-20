@@ -19,8 +19,8 @@ console.log(listing)
       };
       
       const center = listing ? {
-        lat: listing?.latitude,
-        lng: listing?.longitude,
+        lat: parseFloat(listing?.latitude) || 0,
+        lng: parseFloat(listing?.longitude) || 0,
       } : { lat: 0, lng: 0 };
     
     
@@ -35,7 +35,7 @@ console.log(listing)
       {
         <Marker
           key={listing?._id}
-          position={{ lat: listing.latitude, lng: listing.longitude }}
+          position={{ lat: parseFloat(listing.latitude) || 0, lng: parseFloat(listing.longitude) || 0 }}
           // icon={createCustomMarkerIcon(listing.price)}
           label={{text:`${listing.price}`,color:'#fff', fontSize:'12px',className:'marker-label'}}
           onClick={() => setSelected(listing)}
@@ -45,7 +45,7 @@ console.log(listing)
 
       {selected && (
         <InfoWindow
-          position={{ lat: selected.latitude, lng: selected.longitude }}
+          position={{ lat: parseFloat(selected.latitude) || 0, lng: parseFloat(selected.longitude) || 0 }}
           onCloseClick={() => setSelected(null)}
         >
           <div>

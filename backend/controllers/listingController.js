@@ -191,6 +191,8 @@ class ListingController {
       description,
       price,
       location,
+      latitude,
+      longitude,
       parking,
       bed,
       kitchen,
@@ -198,73 +200,93 @@ class ListingController {
       maxPeople,
       garden,
       rooms,
+      hall,
+      bedrooms,
     } = req.body;
     try {
+      const updateData = {
+        title,
+        description,
+        price,
+        location,
+        latitude,
+        longitude,
+        kitchen,
+        parking,
+        bed,
+        area,
+        maxPeople,
+        garden,
+        rooms,
+        hall,
+        bedrooms,
+      };
+
       const listing = await Listing.findByIdAndUpdate(
         listingId,
-        {
-          title,
-          description,
-          price,
-          kitchen,
-          location,
-          parking,
-          bed,
-          area,
-          maxPeople,
-          garden,
-          rooms,
-        },
+        updateData,
         { new: true }
       );
-      res.sendData(200, { data: listing });
+      
+      if (!listing) {
+        return res.sendData(404, { error: "Listing not found." });
+      }
+
+      res.sendData(200, { data: listing, message: "Listing updated successfully!" });
     } catch (error) {
       res.sendData(401, { error: `${error}` });
     }
   }
+
   static async deleteListing(req, res) {
     const listingId = req.params.id;
     
     try {
       const session = await mongoose.startSession();
-    session.startTransaction();
-      const listing = await Listing.findById(listingId);
+      session.startTransaction();
+
+      const listing = await Listing.findById(listingId).session(session);
       if (!listing) {
         await session.abortTransaction();
         session.endSession();
-        return res.sendData(200, { data: {}, message: "Listing not found." });
+        return res.sendData(404, { error: "Listing not found." });
       }
+
       // Find associated media
-      const mediaFiles = await Media.find({ listingId });
+      const mediaFiles = await Media.find({ listingId }).session(session);
+
       // Delete files from storage
-      const deletePromises= mediaFiles.map((media)=>{
-        return new Promise((resolve, reject)=>{
-          fs.unlink(media.path, (err)=>{
+      const deletePromises = mediaFiles.map((media) => {
+        return new Promise((resolve, reject) => {
+          fs.unlink(media.path, (err) => {
             if (err) {
               console.error(`Error deleting file ${media.path}:`, err);
-              reject(err);
+              resolve(); // Continue even if file deletion fails
             } else {
               resolve();
             }
-          })
-        })
+          });
+        });
       });
+
       await Promise.all(deletePromises);
+
       // Delete media documents from the database
-      await Media.deleteMany({ listingId });
+      await Media.deleteMany({ listingId }).session(session);
 
       // Delete the listing
-      await Listing.findByIdAndDelete(listingId);
+      await Listing.findByIdAndDelete(listingId).session(session);
 
-            // Commit the transaction
-            await session.commitTransaction();
-            session.endSession();
-      res.sendData(200, { message: "Deleted Successfully!" });
-    } 
-    catch(error) {
+      // Commit the transaction
+      await session.commitTransaction();
+      session.endSession();
+
+      res.sendData(200, { message: "Listing deleted successfully!" });
+    } catch (error) {
       res.sendData(401, { error: `${error}` });
     }
   }
+
 }
 
 

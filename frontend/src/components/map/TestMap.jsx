@@ -18,12 +18,11 @@ import DLoader from "../loaderDashboard/dLoader";
 import { useGoogleMaps } from "../../context/GoogleMapContext";
 import MapAddInfoWindow from "./addInfoWindow/MapAddInfoWindow";
 
-const TestMap = ({onAddClick}) => {
+const TestMap = ({ onAddClick, onMapClick }) => {
   const [selected, setSelected] = useState(null);
   const [listings, setListings] = useState([]);
   const [zoneData, setZoneData] = useState([]);
   const { isLoaded } = useGoogleMaps();
-
 
   const mapRef = useRef(null);
   const loadZoneData = async () => {
@@ -39,7 +38,7 @@ const TestMap = ({onAddClick}) => {
         lat: parseFloat(row.Latitude),
         lng: parseFloat(row.Longitude),
         subZone: row.SubZone,
-        fullAddress: row.FullAddressDetail
+        fullAddress: row.FullAddressDetail,
       }));
       setZoneData(coords); // Store all data in state
     } catch (error) {
@@ -53,12 +52,8 @@ const TestMap = ({onAddClick}) => {
     loadZoneData();
   }, []);
   useEffect(() => {
-appendListings();
+    appendListings();
   }, [appendListings]);
-
-
-
-
 
   const containerStyle = {
     width: "100%",
@@ -77,6 +72,20 @@ appendListings();
     setSelected(listing);
   }, []);
 
+  const handleMapClick = useCallback(
+    (event) => {
+      if (!onMapClick) return;
+
+      const lat = event?.latLng?.lat?.();
+      const lng = event?.latLng?.lng?.();
+
+      if (lat != null && lng != null) {
+        onMapClick({ lat, lng });
+      }
+    },
+    [onMapClick]
+  );
+
   const clusterOptions = {
     imagePath:
       "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
@@ -87,13 +96,13 @@ appendListings();
     () =>
       listings.map((listing) => (
         <Marker
-        icon={`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAD8GO2jAAAAC0lEQVR42mP8/wcAAwAB/2WCRF4AAAAASUVORK5CYII=`}
+          icon={`data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAAD8GO2jAAAAC0lEQVR42mP8/wcAAwAB/2WCRF4AAAAASUVORK5CYII=`}
           key={`${listing.lat}-${listing.lng}`}
           position={{ lat: listing.lat, lng: listing.lng }}
           label={{
             text: `${listing.houseNo}`,
             color: `green`,
-            fontSize:`20px`,
+            fontSize: `20px`,
             className: "marker-label",
           }}
           onClick={() => handleMarkerClick(listing)}
@@ -108,6 +117,7 @@ appendListings();
       zoom={15}
       center={center}
       onLoad={(map) => (mapRef.current = map)} // Save the map instance to mapRef
+      onClick={handleMapClick} // Handle map clicks
     >
       <MarkerClusterer options={clusterOptions}>
         {(clusterer) =>
@@ -121,8 +131,8 @@ appendListings();
           onCloseClick={() => setSelected(null)}
         >
           <div>
-            <MapAddInfoWindow location={selected} onAddClick={onAddClick}/>     
-                 </div>
+            <MapAddInfoWindow location={selected} onAddClick={onAddClick} />{" "}
+          </div>
         </InfoWindow>
       )}
     </GoogleMap>

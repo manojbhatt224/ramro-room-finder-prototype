@@ -296,7 +296,7 @@ const SinglePage = () => {
 
      
           </div>
-          <p className="sp-title">Nearby Places</p>
+          <p className="sp-title"> Places</p>
           <div className="sp-list-horizontal">
             <div className="sp-feature">
               <img src="/icons/fee.png" alt="" />
@@ -322,7 +322,7 @@ const SinglePage = () => {
           </div>
           <p className="sp-title">Location</p>
           <div className="sp-mapcontainer">
-            {/* <Map listing={listing} /> */}
+            {listing && <Map listing={{...listing, latitude: parseFloat(listing.latitude), longitude: parseFloat(listing.longitude)}} />}
           </div>
           <div className="sp-buttons">
             <button>

@@ -2,9 +2,11 @@ import React from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import {selectUser} from '../../slices/authSlice'
 import { createChat } from "../../slices/chatSlice";
+import { deleteListing, getMyListings } from "../../slices/listingSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import Swal from "sweetalert2";
 import "./ListingCard.css";
 import { FaHeart } from "react-icons/fa";
 import { BiDetail } from "react-icons/bi";
@@ -40,6 +42,43 @@ dispatch(createChat(userId));
 navigate(`/dashboard/chats`);
 }
 
+const handleDeleteListing = async () => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then(async (result) => {
+    if (result.isConfirmed) {
+      try {
+        await dispatch(deleteListing(_id));
+        await dispatch(getMyListings());
+        Swal.fire("Deleted!", "Your listing has been deleted.", "success");
+      } catch (error) {
+        Swal.fire("Error!", "Failed to delete listing.", "error");
+      }
+    }
+  });
+};
+
+const handleEditListing = () => {
+  navigate(`/dashboard/edit/${_id}`);
+};
+
+const resolveMediaUrl = (mediaPath) => {
+  if (!mediaPath) return "";
+  const normalized = mediaPath.replace(/\\/g, "/");
+
+  if (normalized.startsWith("http")) return normalized;
+  if (normalized.startsWith("/uploads/")) return `${import.meta.env.VITE_BACKEND_URL}${normalized}`;
+  if (normalized.startsWith("uploads/")) return `${import.meta.env.VITE_BACKEND_URL}/${normalized}`;
+
+  return `${import.meta.env.VITE_BACKEND_URL}/uploads/${normalized.split("/").pop()}`;
+};
+
   return (
     <div className="listing-card">
       <div className="image-container">
@@ -61,14 +100,12 @@ navigate(`/dashboard/chats`);
           <div className="carousel-inner">
             {medias?.map((media, index) => (
               <div
-                key={index}  
+                key={`${_id}-${index}`}
                 className={`carousel-item ${index === 0 ? "active" : ""}`}
               >
                 <div className="img-wrap">
                   <img
-                    src={`${
-                      import.meta.env.VITE_BACKEND_URL
-                    }/uploads/${media.path.split("\\").pop()}`}
+                    src={resolveMediaUrl(media?.path)}
                     className="d-block cimg"
                     alt={`Media ${index + 1}`}
                     loading="lazy"
@@ -200,10 +237,10 @@ navigate(`/dashboard/chats`);
           <div className="icons">
             {operation && (
               <>
-                <div className="icon">
+                <div className="icon" onClick={handleEditListing} style={{cursor: 'pointer'}}>
                 <CiEdit className="operation-icon text-primary" />
                 </div>
-                <div className="icon">
+                <div className="icon" onClick={handleDeleteListing} style={{cursor: 'pointer'}}>
               <RiDeleteBin6Line className="operation-icon text-danger"/>
                 </div>
               </>

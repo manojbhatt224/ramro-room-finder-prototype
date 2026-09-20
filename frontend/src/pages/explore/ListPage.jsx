@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import "./ListPage.css";
 import Filter from "../../components/filter/Filter";
 import ListingCard from "../../components/listing/ListingCard";
@@ -7,10 +7,10 @@ import {
   getAllListings,
   selectFetchError,
   resetListings,
+  setFetchError,
   selectFetchHasMore,
   selectFetchLoading,
   selectListings,
-  selectPage,
 } from "../../slices/listingSlice";
 import Swal from "sweetalert2";
 import { Oval } from "react-loader-spinner";
@@ -24,32 +24,25 @@ const ListPage = () => {
   const error = useSelector(selectFetchError);
   const listings = useSelector(selectListings);
 
-  const loadMoreData = useCallback(() => {
-    const loadingValue = loading;
-    const hasMoreValue = hasMore;
-   
-    if (!loadingValue && hasMoreValue) {
-      dispatch(getAllListings());
-   
-    } else {
-      return;
-    }
-  }, [dispatch, hasMore, loading]);
-
   useEffect(() => {
     const clearListings = async () => {
       await dispatch(resetListings());
+      dispatch(getAllListings());
     };
 
     clearListings();
   }, [dispatch]);
 
-  useEffect(() => {
-    loadMoreData();
-  }, [hasMore, loading, loadMoreData]);
+  const loadMoreData = useCallback(() => {
+    if (!loading && hasMore) {
+      dispatch(getAllListings());
+    }
+  }, [dispatch, hasMore, loading]);
 
   const handleInfiniteScroll = useCallback(() => {
     const listContainer = listContainerRef.current;
+    if (!listContainer) return;
+
     if (
       listContainer.scrollTop + listContainer.clientHeight + 1 >=
       listContainer.scrollHeight
@@ -62,6 +55,8 @@ const ListPage = () => {
 
   useEffect(() => {
     const listContainer = listContainerRef.current;
+    if (!listContainer) return;
+
     listContainer.addEventListener("scroll", handleInfiniteScroll);
     return () =>
       listContainer.removeEventListener("scroll", handleInfiniteScroll);
@@ -97,7 +92,7 @@ const ListPage = () => {
           {error ? <h1>{error}</h1> : <></>}
           {listings ? (
             listings.map((listing, index) => (
-              <ListingCard key={index} {...listing} operation={false} />
+              <ListingCard key={listing?._id || index} {...listing} operation={false} />
             ))
           ) : (
             <h1>No Data</h1>

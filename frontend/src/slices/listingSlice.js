@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {getMyListingsAPI, getAllListingsAPI, addListingAPI, getListingAPI } from '../api/listingAPI';
+import {getMyListingsAPI, getAllListingsAPI, addListingAPI, getListingAPI, deleteListingAPI, updateListingAPI } from '../api/listingAPI';
+
 
 
 export const getMyListings = createAsyncThunk(
@@ -58,6 +59,31 @@ export const getListing = createAsyncThunk(
     }
   }
 );
+
+export const deleteListing = createAsyncThunk(
+  'listing/deleteListing',
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await deleteListingAPI(id);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const updateListing = createAsyncThunk(
+  'listing/updateListing',
+  async ({ id, updatedData }, { rejectWithValue }) => {
+    try {
+      const response = await updateListingAPI(id, updatedData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 
 const initialState = {
   listing:null,
@@ -132,9 +158,13 @@ export const listingSlice = createSlice({
         state.fetchError = null;
       })
       .addCase(getAllListings.fulfilled, (state, action) => {
+        const incoming = Array.isArray(action.payload?.listings) ? action.payload.listings : [];
+        const existingIds = new Set(state.listings.map((listing) => listing._id));
+        const uniqueIncoming = incoming.filter((listing) => listing?._id && !existingIds.has(listing._id));
+
         state.fetchLoading = false;
-        state.listings = [...state.listings, ...action.payload.listings];
-        state.page+=1;
+        state.listings = [...state.listings, ...uniqueIncoming];
+        state.page += 1;
         state.fetchError = null;
         state.fetchHasMore = action.payload.currentPage < action.payload.totalPages;
       })
@@ -156,8 +186,34 @@ export const listingSlice = createSlice({
         state.operationLoading = false;
         state.operationError = action.payload.data.error;
       })
+      .addCase(deleteListing.pending, (state) => {
+        state.operationLoading = true;
+        state.operationError = null;
+      })
+      .addCase(deleteListing.fulfilled, (state, action) => {
+        state.operationLoading = false;
+        state.operationError = null;
+      })
+      .addCase(deleteListing.rejected, (state, action) => {
+        state.operationLoading = false;
+        state.operationError = action.payload?.data?.error;
+      })
+      .addCase(updateListing.pending, (state) => {
+        state.operationLoading = true;
+        state.operationError = null;
+      })
+      .addCase(updateListing.fulfilled, (state, action) => {
+        state.operationLoading = false;
+        state.operationError = null;
+        state.listing = action.payload.data;
+      })
+      .addCase(updateListing.rejected, (state, action) => {
+        state.operationLoading = false;
+        state.operationError = action.payload?.data?.error;
+      })
   }
 });
+
 
 export const { setFetchError, setOperationError, resetListings, setFilters, clearFilters} = listingSlice.actions;
 export const selectListings=(state)=>state.listing.listings
