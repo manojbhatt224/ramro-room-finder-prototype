@@ -97,7 +97,7 @@ room-finder/
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
+git clone ub.com/manojbhatt224/ramro-room-finder-prototype
 cd ramro-room-finder-prototype
 ```
 
